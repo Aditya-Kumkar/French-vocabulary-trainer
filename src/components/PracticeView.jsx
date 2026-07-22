@@ -122,7 +122,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
 
   return (
     <div className="fvt-animate-in">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, fontSize: 13, color: COLORS.inkMuted }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, fontSize: 14, color: COLORS.inkMuted }}>
         <span className="fvt-mono">
           Question {session.index + 1} of {session.queue.length}
         </span>
@@ -144,21 +144,21 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
       >
         <div style={{ position: "absolute", top: 0, bottom: 0, left: 26, width: 0, borderLeft: `1.5px solid ${COLORS.margin}`, opacity: 0.55 }} />
 
-        <div className="fvt-devanagari" style={{ fontSize: 22, color: COLORS.inkMuted, marginBottom: 6 }}>
+        <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
           {currentQ.hindi}
         </div>
-        <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, marginBottom: 18, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, marginBottom: 18, textTransform: "uppercase", letterSpacing: "0.08em" }}>
           pronunciation
         </div>
 
-        <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
           {currentQ.promptLabel}
         </div>
-        <div className="fvt-display" style={{ fontSize: 26, fontWeight: 600, marginBottom: 22 }}>
+        <div className="fvt-display" style={{ fontSize: 30, fontWeight: 600, marginBottom: 22 }}>
           {currentQ.promptText}
         </div>
 
-        <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
           Write the {currentQ.answerLabel} word
         </div>
         <input
@@ -168,7 +168,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={handleKeyDown}
           className="fvt-answer-line"
-          style={{ fontSize: 22, width: "100%", fontFamily: "'Fraunces', serif" }}
+          style={{ fontSize: 26, width: "100%", fontFamily: "'Fraunces', serif" }}
           autoComplete="off"
           autoCapitalize="off"
           spellCheck="false"
@@ -193,11 +193,11 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
           <div className="fvt-stamp" style={{ marginTop: 18, display: "flex", alignItems: "flex-start", gap: 10 }}>
             {isCorrect ? <Check size={20} color={COLORS.correct} /> : <X size={20} color={COLORS.margin} />}
             <div>
-              <div className="fvt-hand" style={{ fontSize: 24, color: isCorrect ? COLORS.correct : COLORS.margin, lineHeight: 1.1 }}>
+              <div className="fvt-hand" style={{ fontSize: 28, color: isCorrect ? COLORS.correct : COLORS.margin, lineHeight: 1.1 }}>
                 {isCorrect ? "Bravo !" : "Pas tout à fait"}
               </div>
               {!isCorrect && (
-                <div style={{ fontSize: 15, color: COLORS.ink, marginTop: 2 }}>
+                <div style={{ fontSize: 17, color: COLORS.ink, marginTop: 2 }}>
                   Correct answer: <span style={{ fontWeight: 700 }}>{currentQ.correctAnswer}</span>
                 </div>
               )}
@@ -224,10 +224,10 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
 function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
   return (
     <div style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 20 }}>
-      <h2 className="fvt-display" style={{ fontSize: 19, fontWeight: 600, marginTop: 0 }}>
+      <h2 className="fvt-display" style={{ fontSize: 21, fontWeight: 600, marginTop: 0 }}>
         Ready to review?
       </h2>
-      <p style={{ fontSize: 14, color: COLORS.inkMuted, marginTop: -6 }}>
+      <p style={{ fontSize: 16, color: COLORS.inkMuted, marginTop: -6 }}>
         {wordCount} word{wordCount !== 1 ? "s" : ""} in your notebook. The Hindi pronunciation is always shown — you'll write the English or French.
       </p>
 
@@ -240,7 +240,7 @@ function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
           </select>
         </Field>
 
-        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, cursor: "pointer" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, cursor: "pointer" }}>
           <input
             type="checkbox"
             checked={settings.ignoreAccents}
@@ -249,13 +249,13 @@ function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
           Ignore accents when checking French answers (é ≈ e)
         </label>
 
-        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, cursor: "pointer" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, cursor: "pointer" }}>
           <input type="checkbox" checked={settings.weakOnly} onChange={(e) => setSettings({ ...settings, weakOnly: e.target.checked })} />
           Focus on new &amp; struggling words only
         </label>
       </div>
 
-      <button onClick={onStart} style={{ ...primaryBtnStyle, marginTop: 20, padding: "11px 20px", fontSize: 15 }}>
+      <button onClick={onStart} style={{ ...primaryBtnStyle, marginTop: 20, padding: "12px 22px", fontSize: 17 }}>
         Start practice <ChevronRight size={16} />
       </button>
     </div>
@@ -267,21 +267,21 @@ function SessionSummary({ session, onRestart, onChangeSettings }) {
   const pct = total > 0 ? Math.round((session.score / total) * 100) : 0;
   return (
     <div className="fvt-animate-in" style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 22 }}>
-      <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+      <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
         Session complete
       </div>
-      <div className="fvt-display" style={{ fontSize: 32, fontWeight: 600, margin: "6px 0 4px" }}>
-        {session.score} / {total} <span style={{ fontSize: 18, color: COLORS.inkMuted, fontWeight: 400 }}>({pct}%)</span>
+      <div className="fvt-display" style={{ fontSize: 36, fontWeight: 600, margin: "6px 0 4px" }}>
+        {session.score} / {total} <span style={{ fontSize: 20, color: COLORS.inkMuted, fontWeight: 400 }}>({pct}%)</span>
       </div>
 
       {session.mistakes.length === 0 ? (
         <p style={{ color: COLORS.correct, fontWeight: 600 }}>Every word correct — well done.</p>
       ) : (
         <div style={{ marginTop: 16 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.inkMuted, marginBottom: 8 }}>Words to revisit</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: COLORS.inkMuted, marginBottom: 8 }}>Words to revisit</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {session.mistakes.map((m, i) => (
-              <div key={i} style={{ background: COLORS.errorBg, borderRadius: 6, padding: "8px 10px", fontSize: 14 }}>
+              <div key={i} style={{ background: COLORS.errorBg, borderRadius: 6, padding: "9px 12px", fontSize: 16 }}>
                 <span className="fvt-devanagari" style={{ color: COLORS.inkMuted, marginRight: 8 }}>
                   {m.hindi}
                 </span>
