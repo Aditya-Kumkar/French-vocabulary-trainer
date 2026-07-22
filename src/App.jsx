@@ -148,7 +148,7 @@ export default function App() {
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px" }}>
         <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} />
         {wordsLoading ? (
-          <div style={{ color: COLORS.inkMuted, fontSize: 14, padding: "20px 0" }}>Loading your words…</div>
+          <div style={{ color: COLORS.inkMuted, fontSize: 16, padding: "20px 0" }}>Loading your words…</div>
         ) : tab === "practice" ? (
           <PracticeView words={words} settings={settings} setSettings={setSettings} onRecordAttempt={handleRecordAttempt} />
         ) : (
@@ -164,12 +164,12 @@ function Header({ tab, setTab, saveError, displayName, onSignOut }) {
     <div className="fvt-animate-in" style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <div className="fvt-mono" style={{ fontSize: 11, letterSpacing: "0.16em", color: COLORS.margin, textTransform: "uppercase", marginBottom: 4 }}>
+          <div className="fvt-mono" style={{ fontSize: 12, letterSpacing: "0.16em", color: COLORS.margin, textTransform: "uppercase", marginBottom: 4 }}>
             Cahier de vocabulaire
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
             <Feather size={26} color={COLORS.margin} style={{ transform: "rotate(-25deg)" }} />
-            <h1 className="fvt-display" style={{ fontSize: 30, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
+            <h1 className="fvt-display" style={{ fontSize: 32, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
               French Vocabulary Trainer
             </h1>
           </div>
@@ -180,7 +180,7 @@ function Header({ tab, setTab, saveError, displayName, onSignOut }) {
             display: "flex",
             alignItems: "center",
             gap: 6,
-            fontSize: 13,
+            fontSize: 14,
             color: COLORS.inkMuted,
             background: "none",
             border: `1px solid ${COLORS.border}`,
@@ -198,7 +198,7 @@ function Header({ tab, setTab, saveError, displayName, onSignOut }) {
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
       </div>
       {saveError && (
-        <div style={{ marginTop: 10, fontSize: 13, color: COLORS.margin }}>
+        <div style={{ marginTop: 10, fontSize: 14, color: COLORS.margin }}>
           Couldn't save your last change — check your connection and try again.
         </div>
       )}
@@ -212,7 +212,7 @@ function TabButton({ label, active, onClick }) {
       onClick={onClick}
       style={{
         padding: "8px 14px",
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: 600,
         background: "none",
         border: "none",
