@@ -66,11 +66,6 @@ export const FONTS_CSS = `
 
 .fvt-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
 .fvt-scrollbar::-webkit-scrollbar-thumb { background: ${COLORS.ruleFaint}; border-radius: 4px; }
-
-.fvt-page-rule { display: block; }
-@media (max-width: 900px) {
-  .fvt-page-rule { display: none; }
-}
 `;
 
 export const inputStyle = {
