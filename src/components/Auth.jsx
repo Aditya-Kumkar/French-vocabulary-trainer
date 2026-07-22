@@ -3,6 +3,20 @@ import { Feather } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, Field } from "../theme";
 
+const AUTH_DECOR_CSS = `
+.fvt-decor { display: block; }
+@media (max-width: 900px) {
+  .fvt-decor { display: none; }
+}
+`;
+
+const SAMPLE_CARDS = [
+  { en: "hello", fr: "bonjour", hindi: "बों-ज़ूर", style: { left: "5%", top: "20%", rotate: "-7deg" } },
+  { en: "thank you", fr: "merci", hindi: "मैर-सी", style: { left: "8%", top: "68%", rotate: "5deg" } },
+  { en: "water", fr: "l'eau", hindi: "लो", style: { right: "6%", top: "26%", rotate: "6deg" } },
+  { en: "friend", fr: "ami", hindi: "आमी", style: { right: "9%", top: "70%", rotate: "-5deg" } },
+];
+
 export default function Auth() {
   const [mode, setMode] = useState("login"); // 'login' | 'signup'
   const [email, setEmail] = useState("");
@@ -61,23 +75,35 @@ export default function Auth() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div className="fvt-animate-in" style={{ width: "100%", maxWidth: 380 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22, justifyContent: "center" }}>
+    <div className="fvt-seyes" style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, overflow: "hidden" }}>
+      <style>{AUTH_DECOR_CSS}</style>
+
+      {SAMPLE_CARDS.map((c, i) => (
+        <Flashcard key={i} {...c} />
+      ))}
+
+      <div className="fvt-animate-in" style={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 2 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6, justifyContent: "center" }}>
           <Feather size={26} color={COLORS.margin} style={{ transform: "rotate(-25deg)" }} />
           <h1 className="fvt-display" style={{ fontSize: 26, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
             Cahier de vocabulaire
           </h1>
         </div>
+        <p style={{ textAlign: "center", fontSize: 13, color: COLORS.inkMuted, fontStyle: "italic", marginTop: 0, marginBottom: 22 }}>
+          your French vocabulary notebook
+        </p>
 
         <div
           style={{
+            position: "relative",
             background: COLORS.page,
             border: `1px solid ${COLORS.border}`,
             borderRadius: 10,
             padding: 22,
+            boxShadow: "0 3px 10px rgba(32,38,58,0.08)",
           }}
         >
+          <Tape />
           <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
             <TabButton label="Log in" active={mode === "login"} onClick={() => switchMode("login")} />
             <TabButton label="Create account" active={mode === "signup"} onClick={() => switchMode("signup")} />
@@ -130,6 +156,66 @@ export default function Auth() {
         </p>
       </div>
     </div>
+  );
+}
+
+function Flashcard({ en, fr, hindi, style }) {
+  return (
+    <div
+      className="fvt-decor"
+      style={{
+        position: "absolute",
+        ...style,
+        transform: `rotate(${style.rotate})`,
+        zIndex: 1,
+        background: COLORS.page,
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: 6,
+        padding: "10px 14px",
+        boxShadow: "0 4px 10px rgba(32,38,58,0.10)",
+        width: 132,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: -9,
+          left: "50%",
+          transform: "translateX(-50%) rotate(-2deg)",
+          width: 46,
+          height: 16,
+          background: "rgba(184,134,47,0.45)",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.12)",
+        }}
+      />
+      <div style={{ fontSize: 11, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.06em" }} className="fvt-mono">
+        {en}
+      </div>
+      <div className="fvt-display" style={{ fontSize: 17, fontWeight: 600, color: COLORS.margin, fontStyle: "italic", margin: "2px 0" }}>
+        {fr}
+      </div>
+      <div className="fvt-devanagari" style={{ fontSize: 13, color: COLORS.inkMuted }}>
+        {hindi}
+      </div>
+    </div>
+  );
+}
+
+function Tape() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: -14,
+        left: "50%",
+        transform: "translateX(-50%) rotate(-3deg)",
+        width: 90,
+        height: 26,
+        background: "repeating-linear-gradient(45deg, rgba(184,134,47,0.55) 0 6px, rgba(184,134,47,0.35) 6px 12px)",
+        borderRadius: 2,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+      }}
+    />
   );
 }
 
