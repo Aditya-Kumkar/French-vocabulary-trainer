@@ -126,7 +126,7 @@ export default function App() {
 
   if (session === undefined) {
     return (
-      <div style={{ background: COLORS.paper, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.inkMuted }}>
+      <div className="fvt-seyes" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.inkMuted }}>
         <style>{FONTS_CSS}</style>
         Opening your cahier…
       </div>
@@ -135,7 +135,7 @@ export default function App() {
 
   if (!session) {
     return (
-      <div className="fvt-root" style={{ background: COLORS.paper, minHeight: "100vh", color: COLORS.ink }}>
+      <div className="fvt-root" style={{ minHeight: "100vh", color: COLORS.ink }}>
         <style>{FONTS_CSS}</style>
         <Auth />
       </div>
@@ -143,9 +143,10 @@ export default function App() {
   }
 
   return (
-    <div className="fvt-root" style={{ background: COLORS.paper, minHeight: "100vh", color: COLORS.ink }}>
+    <div className="fvt-root fvt-seyes" style={{ position: "relative", minHeight: "100vh", color: COLORS.ink }}>
       <style>{FONTS_CSS}</style>
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px" }}>
+      <div className="fvt-page-rule" style={{ position: "fixed", top: 0, bottom: 0, left: 44, width: 0, borderLeft: `1.5px solid ${COLORS.margin}`, opacity: 0.3, zIndex: 0 }} />
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px", position: "relative", zIndex: 1 }}>
         <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} />
         {wordsLoading ? (
           <div style={{ color: COLORS.inkMuted, fontSize: 16, padding: "20px 0" }}>Loading your words…</div>
