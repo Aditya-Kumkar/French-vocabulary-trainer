@@ -38,15 +38,9 @@ export default function Auth() {
         const { data, error: signUpError } = await supabase.auth.signUp({
           email: email.trim(),
           password,
+          options: { data: { display_name: displayName.trim() } },
         });
         if (signUpError) throw signUpError;
-
-        if (data.user) {
-          const { error: profileError } = await supabase
-            .from("profiles")
-            .insert({ id: data.user.id, display_name: displayName.trim() });
-          if (profileError) throw profileError;
-        }
 
         if (!data.session) {
           setInfo("Account created. Check your email to confirm it, then log in below.");
