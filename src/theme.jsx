@@ -70,10 +70,10 @@ export const FONTS_CSS = `
 
 export const inputStyle = {
   width: "100%",
-  padding: "9px 10px",
+  padding: "10px 12px",
   border: `1px solid ${COLORS.border}`,
   borderRadius: 6,
-  fontSize: 15,
+  fontSize: 17,
   background: "#fff",
   color: COLORS.ink,
 };
@@ -86,8 +86,8 @@ export const primaryBtnStyle = {
   color: "#fff",
   border: "none",
   borderRadius: 6,
-  padding: "9px 16px",
-  fontSize: 14,
+  padding: "10px 18px",
+  fontSize: 16,
   fontWeight: 600,
   cursor: "pointer",
 };
@@ -100,8 +100,8 @@ export const secondaryBtnStyle = {
   color: COLORS.inkMuted,
   border: `1px solid ${COLORS.border}`,
   borderRadius: 6,
-  padding: "9px 16px",
-  fontSize: 14,
+  padding: "10px 18px",
+  fontSize: 16,
   fontWeight: 600,
   cursor: "pointer",
 };
@@ -122,7 +122,7 @@ export const iconBtnStyle = {
 export function Field({ label, children }) {
   return (
     <label style={{ display: "block" }}>
-      <div style={{ fontSize: 12, color: COLORS.inkMuted, marginBottom: 4, fontWeight: 600 }}>{label}</div>
+      <div style={{ fontSize: 13, color: COLORS.inkMuted, marginBottom: 5, fontWeight: 600 }}>{label}</div>
       {children}
     </label>
   );
@@ -137,7 +137,7 @@ export function EmptyNote({ text }) {
         padding: "22px 18px",
         textAlign: "center",
         color: COLORS.inkMuted,
-        fontSize: 14,
+        fontSize: 15,
       }}
     >
       {text}
