@@ -11,10 +11,14 @@ const AUTH_DECOR_CSS = `
 `;
 
 const SAMPLE_CARDS = [
-  { en: "hello", fr: "bonjour", hindi: "बों-ज़ूर", style: { left: "5%", top: "20%", rotate: "-7deg" } },
-  { en: "thank you", fr: "merci", hindi: "मैर-सी", style: { left: "8%", top: "68%", rotate: "5deg" } },
-  { en: "water", fr: "l'eau", hindi: "लो", style: { right: "6%", top: "26%", rotate: "6deg" } },
-  { en: "friend", fr: "ami", hindi: "आमी", style: { right: "9%", top: "70%", rotate: "-5deg" } },
+  { en: "hello", fr: "bonjour", hindi: "बों-ज़ूर", style: { left: "4%", top: "6%", rotate: "-7deg" } },
+  { en: "friend", fr: "ami", hindi: "आमी", style: { left: "9%", top: "30%", rotate: "5deg" } },
+  { en: "goodbye", fr: "au revoir", hindi: "ओ-रवआर", style: { left: "5%", top: "54%", rotate: "-4deg" } },
+  { en: "thank you", fr: "merci", hindi: "मैर-सी", style: { left: "10%", top: "78%", rotate: "6deg" } },
+  { en: "water", fr: "l'eau", hindi: "लो", style: { right: "5%", top: "10%", rotate: "6deg" } },
+  { en: "cat", fr: "chat", hindi: "शा", style: { right: "10%", top: "34%", rotate: "-5deg" } },
+  { en: "school", fr: "école", hindi: "एकॉल", style: { right: "4%", top: "58%", rotate: "4deg" } },
+  { en: "house", fr: "maison", hindi: "मेज़ों", style: { right: "9%", top: "82%", rotate: "-6deg" } },
 ];
 
 export default function Auth() {
@@ -85,11 +89,11 @@ export default function Auth() {
       <div className="fvt-animate-in" style={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 2 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6, justifyContent: "center" }}>
           <Feather size={26} color={COLORS.margin} style={{ transform: "rotate(-25deg)" }} />
-          <h1 className="fvt-display" style={{ fontSize: 26, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
+          <h1 className="fvt-display" style={{ fontSize: 32, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
             Cahier de vocabulaire
           </h1>
         </div>
-        <p style={{ textAlign: "center", fontSize: 13, color: COLORS.inkMuted, fontStyle: "italic", marginTop: 0, marginBottom: 22 }}>
+        <p style={{ textAlign: "center", fontSize: 15, color: COLORS.inkMuted, fontStyle: "italic", marginTop: 0, marginBottom: 22 }}>
           your French vocabulary notebook
         </p>
 
@@ -151,7 +155,7 @@ export default function Auth() {
           </form>
         </div>
 
-        <p style={{ textAlign: "center", fontSize: 12, color: COLORS.inkFaint, marginTop: 14 }}>
+        <p style={{ textAlign: "center", fontSize: 14, color: COLORS.inkFaint, marginTop: 14 }}>
           Each account keeps its own private word list.
         </p>
       </div>
@@ -173,7 +177,7 @@ function Flashcard({ en, fr, hindi, style }) {
         borderRadius: 6,
         padding: "10px 14px",
         boxShadow: "0 4px 10px rgba(32,38,58,0.10)",
-        width: 132,
+        width: 150,
       }}
     >
       <div
@@ -188,13 +192,13 @@ function Flashcard({ en, fr, hindi, style }) {
           boxShadow: "0 1px 2px rgba(0,0,0,0.12)",
         }}
       />
-      <div style={{ fontSize: 11, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.06em" }} className="fvt-mono">
+      <div style={{ fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.06em" }} className="fvt-mono">
         {en}
       </div>
-      <div className="fvt-display" style={{ fontSize: 17, fontWeight: 600, color: COLORS.margin, fontStyle: "italic", margin: "2px 0" }}>
+      <div className="fvt-display" style={{ fontSize: 20, fontWeight: 600, color: COLORS.margin, fontStyle: "italic", margin: "2px 0" }}>
         {fr}
       </div>
-      <div className="fvt-devanagari" style={{ fontSize: 13, color: COLORS.inkMuted }}>
+      <div className="fvt-devanagari" style={{ fontSize: 15, color: COLORS.inkMuted }}>
         {hindi}
       </div>
     </div>
