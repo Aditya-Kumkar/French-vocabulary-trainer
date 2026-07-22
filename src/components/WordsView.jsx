@@ -86,7 +86,7 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
     <div className="fvt-animate-in">
       <div style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 18, marginBottom: 22 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-          <h2 className="fvt-display" style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>
+          <h2 className="fvt-display" style={{ fontSize: 20, fontWeight: 600, margin: 0 }}>
             {editingId ? "Edit word" : "Add words"}
           </h2>
           {!editingId && (
@@ -95,7 +95,7 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
                 setMode(mode === "single" ? "bulk" : "single");
                 setError("");
               }}
-              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: COLORS.inkMuted, background: "none", border: "none", cursor: "pointer" }}
+              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14, color: COLORS.inkMuted, background: "none", border: "none", cursor: "pointer" }}
             >
               <ListPlus size={15} /> {mode === "single" ? "Add several at once" : "Add one at a time"}
             </button>
@@ -120,7 +120,7 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
                 placeholder="e.g. आमी"
               />
             </Field>
-            {error && <div style={{ color: COLORS.margin, fontSize: 13, marginTop: 8 }}>{error}</div>}
+            {error && <div style={{ color: COLORS.margin, fontSize: 14, marginTop: 8 }}>{error}</div>}
             <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
               <button onClick={submitSingle} disabled={busy} style={primaryBtnStyle}>
                 {editingId ? <Check size={15} /> : <Plus size={15} />} {editingId ? "Save changes" : "Add word"}
@@ -134,17 +134,17 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
           </div>
         ) : (
           <div>
-            <p style={{ fontSize: 13, color: COLORS.inkMuted, marginTop: 0 }}>
+            <p style={{ fontSize: 14, color: COLORS.inkMuted, marginTop: 0 }}>
               One word per line, in the format <span className="fvt-mono">english | french | hindi</span>
             </p>
             <textarea
               value={bulkText}
               onChange={(e) => setBulkText(e.target.value)}
               rows={5}
-              style={{ ...inputStyle, width: "100%", resize: "vertical", fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
+              style={{ ...inputStyle, width: "100%", resize: "vertical", fontFamily: "'JetBrains Mono', monospace", fontSize: 14 }}
               placeholder={"friend | ami | आमी\nhouse | maison | मेज़ों"}
             />
-            {error && <div style={{ color: COLORS.margin, fontSize: 13, marginTop: 8 }}>{error}</div>}
+            {error && <div style={{ color: COLORS.margin, fontSize: 14, marginTop: 8 }}>{error}</div>}
             <button onClick={submitBulk} disabled={busy} style={{ ...primaryBtnStyle, marginTop: 12 }}>
               <Plus size={15} /> Add these words
             </button>
@@ -153,10 +153,10 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-        <h2 className="fvt-display" style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>
+        <h2 className="fvt-display" style={{ fontSize: 20, fontWeight: 600, margin: 0 }}>
           Your words
         </h2>
-        <span className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint }}>
+        <span className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint }}>
           {words.length} total
         </span>
       </div>
@@ -186,19 +186,19 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
                     <span style={{ fontWeight: 600 }}>{w.english}</span>
                     <span style={{ color: COLORS.inkFaint }}>—</span>
                     <span style={{ fontStyle: "italic", color: COLORS.margin }}>{w.french}</span>
-                    <span className="fvt-devanagari" style={{ color: COLORS.inkMuted, fontSize: 14 }}>
+                    <span className="fvt-devanagari" style={{ color: COLORS.inkMuted, fontSize: 16 }}>
                       {w.hindi}
                     </span>
                   </div>
                   {accuracy !== null && (
-                    <div className="fvt-mono" style={{ fontSize: 11, color: COLORS.inkFaint, marginTop: 4 }}>
+                    <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, marginTop: 4 }}>
                       {accuracy}% accuracy · {attempts} attempt{attempts !== 1 ? "s" : ""}
                     </div>
                   )}
                 </div>
                 {confirmDeleteId === w.id ? (
                   <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
-                    <span style={{ fontSize: 12, color: COLORS.inkMuted }}>Delete?</span>
+                    <span style={{ fontSize: 13, color: COLORS.inkMuted }}>Delete?</span>
                     <button onClick={() => deleteWord(w.id)} style={{ ...iconBtnStyle, color: COLORS.margin }}>
                       Yes
                     </button>
