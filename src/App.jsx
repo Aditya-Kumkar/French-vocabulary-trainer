@@ -145,7 +145,7 @@ export default function App() {
   return (
     <div className="fvt-root fvt-seyes" style={{ position: "relative", minHeight: "100vh", color: COLORS.ink }}>
       <style>{FONTS_CSS}</style>
-      <div className="fvt-page-rule" style={{ position: "fixed", top: 0, bottom: 0, left: 44, width: 0, borderLeft: `1.5px solid ${COLORS.margin}`, opacity: 0.3, zIndex: 0 }} />
+      <div className="fvt-page-rule" style={{ position: "fixed", top: 0, bottom: 0, left: 55, width: 0, borderLeft: `1.5px solid ${COLORS.margin}`, opacity: 0.35, zIndex: 0 }} />
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px", position: "relative", zIndex: 1 }}>
         <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} />
         {wordsLoading ? (
