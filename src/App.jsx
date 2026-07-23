@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Feather, LogOut } from "lucide-react";
 import { supabase } from "./supabaseClient";
-import { COLORS, FONTS_CSS, cardShadow } from "./theme";
+import { COLORS, FONTS_CSS } from "./theme";
 import Auth from "./components/Auth.jsx";
 import WordsView from "./components/WordsView.jsx";
 import PracticeView from "./components/PracticeView.jsx";
@@ -11,13 +11,15 @@ const SETTINGS_KEY = "fvt-settings";
 
 const DECOR_POSITIONS = [
   { left: "7%", top: "14%", rotate: "-6deg" },
+  { left: "10%", top: "46%", rotate: "5deg" },
   { left: "6%", top: "78%", rotate: "-4deg" },
   { right: "6%", top: "20%", rotate: "6deg" },
+  { right: "9%", top: "52%", rotate: "-5deg" },
   { right: "5%", top: "84%", rotate: "4deg" },
 ];
 
 function SideDecor({ words }) {
-  if (!words || words.length < 2) return null;
+  if (!words || words.length < 3) return null;
   const picks = words.slice(0, DECOR_POSITIONS.length);
   return (
     <>
@@ -36,7 +38,7 @@ function SideDecor({ words }) {
               border: `1px solid ${COLORS.border}`,
               borderRadius: 6,
               padding: "10px 14px",
-              boxShadow: cardShadow,
+              boxShadow: "0 4px 10px rgba(32,38,58,0.10)",
               width: 148,
             }}
           >
@@ -71,139 +73,11 @@ function SideDecor({ words }) {
 function loadSettings() {
   try {
     const raw = localStorage.getItem(SETTINGS_KEY);
-    return raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : DEFAULT_SETTINGS;
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
-}
-
-export default function App() {
-  const [session, setSession] = useState(undefined); // undefined = loading, null = signed out
-  const [profile, setProfile] = useState(null);
-  const [words, setWords] = useState([]);
-  const [wordsLoading, setWordsLoading] = useState(true);
-  const [tab, setTab] = useState("practice");
-  const [settings, setSettingsState] = useState(loadSettings);
-  const [saveError, setSaveError] = useState(false);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
-    return () => listener.subscription.unsubscribe();
-  }, []);
-
-  const fetchWords = useCallback(async () => {
-    setWordsLoading(true);
-    const { data, error } = await supabase.from("words").select("*").order("created_at", { ascending: true });
-    if (!error) setWords(data || []);
-    setWordsLoading(false);
-  }, []);
-
-  const fetchProfile = useCallback(async (userId) => {
-    const { data } = await supabase.from("profiles").select("display_name").eq("id", userId).single();
-    setProfile(data || null);
-  }, []);
-
-  useEffect(() => {
-    if (session?.user) {
-      fetchWords();
-      fetchProfile(session.user.id);
-    } else {
-      setWords([]);
-      setProfile(null);
-    }
-  }, [session, fetchWords, fetchProfile]);
-
-  const setSettings = (next) => {
-    setSettingsState(next);
-    try {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
-    } catch {
-      // non-fatal — settings just won't persist across visits
-    }
-  };
-
-  const handleAdd = async (fields) => {
-    const userId = session.user.id;
-    const { data, error } = await supabase
-      .from("words")
-      .insert({ ...fields, user_id: userId, correct_count: 0, incorrect_count: 0 })
-      .select()
-      .single();
-    if (error) throw error;
-    setWords((prev) => [...prev, data]);
-  };
-
-  const handleBulkAdd = async (list) => {
-    const userId = session.user.id;
-    const rows = list.map((w) => ({ ...w, user_id: userId, correct_count: 0, incorrect_count: 0 }));
-    const { data, error } = await supabase.from("words").insert(rows).select();
-    if (error) throw error;
-    setWords((prev) => [...prev, ...(data || [])]);
-  };
-
-  const handleEdit = async (id, fields) => {
-    const { data, error } = await supabase.from("words").update(fields).eq("id", id).select().single();
-    if (error) throw error;
-    setWords((prev) => prev.map((w) => (w.id === id ? data : w)));
-  };
-
-  const handleDelete = async (id) => {
-    const prev = words;
-    setWords((p) => p.filter((w) => w.id !== id));
-    const { error } = await supabase.from("words").delete().eq("id", id);
-    if (error) setWords(prev); // revert on failure
-  };
-
-  const handleRecordAttempt = (wordId, correct) => {
-    setWords((prev) =>
-      prev.map((w) =>
-        w.id === wordId
-          ? {
-              ...w,
-              correct_count: w.correct_count + (correct ? 1 : 0),
-              incorrect_count: w.incorrect_count + (correct ? 0 : 1),
-            }
-          : w
-      )
-    );
-    const word = words.find((w) => w.id === wordId);
-    if (!word) return;
-    supabase
-      .from("words")
-      .update({
-        correct_count: word.correct_count + (correct ? 1 : 0),
-        incorrect_count: word.incorrect_count + (correct ? 0 : 1),
-      })
-      .eq("id", wordId)
-      .then(({ error }) => setSaveError(!!error));
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  if (session === undefined) {
-    return (
-      <div className="fvt-seyes" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.inkMuted }}>
-        <style>{FONTS_CSS}</style>
-        Opening your cahier…
-      </div>
-    );
-  }
-
-  if (!session) {
-    return (
-      <div className="fvt-root" style={{ minHeight: "100vh", color: COLORS.ink }}>
-        <style>{FONTS_CSS}</style>
-        <Auth />
-      </div>
-    );
-  }
-
+@@ -145,85 +206,100 @@
   return (
     <div className="fvt-root fvt-seyes" style={{ position: "relative", minHeight: "100vh", color: COLORS.ink }}>
       <style>{FONTS_CSS}</style>
+      <div className="fvt-page-rule" style={{ position: "fixed", top: 0, bottom: 0, left: 55, width: 0, borderLeft: `1.5px solid ${COLORS.margin}`, opacity: 0.35, zIndex: 0 }} />
       <div
         className="fvt-spiral"
         style={{
