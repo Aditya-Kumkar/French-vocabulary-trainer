@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, X, RotateCcw, ChevronRight, Flame } from "lucide-react";
+import { Check, X, RotateCcw, ChevronRight, Flame, PenLine } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, Field, EmptyNote } from "../theme";
 
 function stripDiacritics(str) {
@@ -131,19 +131,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
         </span>
       </div>
 
-      <div
-        className="fvt-seyes"
-        style={{
-          position: "relative",
-          borderRadius: 10,
-          border: `1px solid ${COLORS.border}`,
-          padding: "28px 24px 24px 40px",
-          overflow: "hidden",
-          boxShadow: "0 1px 3px rgba(32,38,58,0.06)",
-        }}
-      >
-        <div style={{ position: "absolute", top: 0, bottom: 0, left: 26, width: 0, borderLeft: `1.5px solid ${COLORS.margin}`, opacity: 0.55 }} />
-
+      <div style={{ padding: "8px 4px 28px" }}>
         <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
           {currentQ.hindi}
         </div>
@@ -158,7 +146,8 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
           {currentQ.promptText}
         </div>
 
-        <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <div className="fvt-mono" style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <PenLine size={13} color={COLORS.margin} />
           Write the {currentQ.answerLabel} word
         </div>
         <input
