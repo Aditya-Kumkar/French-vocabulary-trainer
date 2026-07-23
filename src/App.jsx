@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Feather, LogOut } from "lucide-react";
 import { supabase } from "./supabaseClient";
-import { COLORS, FONTS_CSS } from "./theme";
+import { COLORS, FONTS_CSS, cardShadow } from "./theme";
 import Auth from "./components/Auth.jsx";
 import WordsView from "./components/WordsView.jsx";
 import PracticeView from "./components/PracticeView.jsx";
@@ -11,15 +11,13 @@ const SETTINGS_KEY = "fvt-settings";
 
 const DECOR_POSITIONS = [
   { left: "7%", top: "14%", rotate: "-6deg" },
-  { left: "10%", top: "46%", rotate: "5deg" },
   { left: "6%", top: "78%", rotate: "-4deg" },
   { right: "6%", top: "20%", rotate: "6deg" },
-  { right: "9%", top: "52%", rotate: "-5deg" },
   { right: "5%", top: "84%", rotate: "4deg" },
 ];
 
 function SideDecor({ words }) {
-  if (!words || words.length < 3) return null;
+  if (!words || words.length < 2) return null;
   const picks = words.slice(0, DECOR_POSITIONS.length);
   return (
     <>
@@ -38,7 +36,7 @@ function SideDecor({ words }) {
               border: `1px solid ${COLORS.border}`,
               borderRadius: 6,
               padding: "10px 14px",
-              boxShadow: "0 4px 10px rgba(32,38,58,0.10)",
+              boxShadow: cardShadow,
               width: 148,
             }}
           >
