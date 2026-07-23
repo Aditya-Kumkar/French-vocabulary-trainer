@@ -1,6 +1,6 @@
 export const COLORS = {
-  paper: "#EEF0E6",
-  page: "#FBFAF5",
+  paper: "#E1DEC9",
+  page: "#F1EEDE",
   ink: "#20263A",
   inkMuted: "#5B6275",
   inkFaint: "#8A90A0",
@@ -12,7 +12,7 @@ export const COLORS = {
   gold: "#B8862F",
   goldBg: "#F4E9D3",
   errorBg: "#F7E7E4",
-  border: "#DCD9CA",
+  border: "#D0CBB4",
 };
 
 export const FONTS_CSS = `
@@ -52,8 +52,16 @@ export const FONTS_CSS = `
 .fvt-seyes {
   background-color: ${COLORS.page};
   background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 27px, ${COLORS.ruleFaint} 27px, ${COLORS.ruleFaint} 28px),
-    repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(199,214,226,0.45) 27px, rgba(199,214,226,0.45) 28px);
+    radial-gradient(ellipse at 50% 35%, transparent 55%, rgba(32,38,58,0.05) 100%),
+    linear-gradient(90deg, transparent 0, transparent 55px, ${COLORS.margin} 55px, ${COLORS.margin} 57px, transparent 57px),
+    repeating-linear-gradient(0deg, transparent, transparent 31px, ${COLORS.ruleFaint} 31px, ${COLORS.ruleFaint} 32px);
+}
+@media (max-width: 900px) {
+  .fvt-seyes {
+    background-image:
+      radial-gradient(ellipse at 50% 35%, transparent 55%, rgba(32,38,58,0.05) 100%),
+      repeating-linear-gradient(0deg, transparent, transparent 31px, ${COLORS.ruleFaint} 31px, ${COLORS.ruleFaint} 32px);
+  }
 }
 
 .fvt-answer-line {
@@ -66,6 +74,16 @@ export const FONTS_CSS = `
 
 .fvt-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
 .fvt-scrollbar::-webkit-scrollbar-thumb { background: ${COLORS.ruleFaint}; border-radius: 4px; }
+
+.fvt-spiral { display: block; }
+@media (max-width: 900px) {
+  .fvt-spiral { display: none; }
+}
+
+.fvt-app-decor { display: block; }
+@media (max-width: 1150px) {
+  .fvt-app-decor { display: none; }
+}
 `;
 
 export const inputStyle = {
