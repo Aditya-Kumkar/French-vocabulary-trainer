@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Feather } from "lucide-react";
 import { supabase } from "../supabaseClient";
-import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, Field } from "../theme";
+import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, cardShadow, Field } from "../theme";
 
 const AUTH_DECOR_CSS = `
 .fvt-decor { display: block; }
@@ -104,7 +104,7 @@ export default function Auth() {
             border: `1px solid ${COLORS.border}`,
             borderRadius: 10,
             padding: 22,
-            boxShadow: "0 3px 10px rgba(32,38,58,0.08)",
+            boxShadow: cardShadow,
           }}
         >
           <Tape />
@@ -176,7 +176,7 @@ function Flashcard({ en, fr, hindi, style }) {
         border: `1px solid ${COLORS.border}`,
         borderRadius: 6,
         padding: "10px 14px",
-        boxShadow: "0 4px 10px rgba(32,38,58,0.10)",
+        boxShadow: cardShadow,
         width: 150,
       }}
     >
