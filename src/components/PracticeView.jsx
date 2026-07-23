@@ -131,7 +131,15 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
         </span>
       </div>
 
-      <div style={{ padding: "8px 4px 28px" }}>
+      <div
+        style={{
+          background: COLORS.page,
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 10,
+          padding: "24px 24px 24px 28px",
+          boxShadow: "0 6px 16px rgba(32,38,58,0.10)",
+        }}
+      >
         <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
           {currentQ.hindi}
         </div>
