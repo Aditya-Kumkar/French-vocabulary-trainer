@@ -30,6 +30,7 @@ function buildQueue(words, settings) {
     const answerIsFrench = direction === "en2fr";
     return {
       wordId: w.id,
+      source: w.source,
       hindi: w.hindi,
       promptText: answerIsFrench ? w.english : w.french,
       promptLabel: answerIsFrench ? "English" : "French",
@@ -68,7 +69,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
       score: s.score + (correct ? 1 : 0),
       mistakes: correct ? s.mistakes : [...s.mistakes, { ...currentQ, userAnswer: answer }],
     }));
-    onRecordAttempt(currentQ.wordId, correct);
+    onRecordAttempt(currentQ.wordId, currentQ.source, correct);
   };
 
   const next = () => {
