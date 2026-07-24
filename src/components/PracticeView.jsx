@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Check, X, RotateCcw, ChevronRight, Flame, PenLine } from "lucide-react";
-import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, Field, EmptyNote } from "../theme";
+import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Field, EmptyNote } from "../theme";
 
 function stripDiacritics(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -137,7 +137,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
           border: `1px solid ${COLORS.border}`,
           borderRadius: 10,
           padding: "24px 24px 24px 28px",
-          boxShadow: "0 6px 16px rgba(32,38,58,0.10)",
+          boxShadow: cardShadow,
         }}
       >
         <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
