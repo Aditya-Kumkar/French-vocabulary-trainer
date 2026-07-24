@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { Feather, LogOut } from "lucide-react";
+import { Feather, LogOut, Users } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { COLORS, FONTS_CSS, cardShadow } from "./theme";
 import Auth from "./components/Auth.jsx";
 import WordsView from "./components/WordsView.jsx";
 import PracticeView from "./components/PracticeView.jsx";
+import ClassDashboard from "./components/ClassDashboard.jsx";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false };
 const SETTINGS_KEY = "fvt-settings";
@@ -148,6 +149,7 @@ export default function App() {
   const [session, setSession] = useState(undefined); // undefined = loading, null = signed out
   const [profile, setProfile] = useState(null);
   const [words, setWords] = useState([]);
+  const [classWords, setClassWords] = useState([]);
   const [wordsLoading, setWordsLoading] = useState(true);
   const [tab, setTab] = useState("practice");
   const [settings, setSettingsState] = useState(loadSettings);
@@ -166,20 +168,39 @@ export default function App() {
     setWordsLoading(false);
   }, []);
 
+  const fetchClassWords = useCallback(async () => {
+    const { data: cw, error: cwErr } = await supabase.from("class_words").select("*").order("created_at", { ascending: true });
+    if (cwErr) return;
+    const { data: progress } = await supabase.from("class_word_progress").select("*");
+    const progressMap = new Map((progress || []).map((p) => [p.class_word_id, p]));
+    const merged = (cw || []).map((w) => {
+      const p = progressMap.get(w.id);
+      return {
+        ...w,
+        correct_count: p?.correct_count || 0,
+        incorrect_count: p?.incorrect_count || 0,
+        source: "class",
+      };
+    });
+    setClassWords(merged);
+  }, []);
+
   const fetchProfile = useCallback(async (userId) => {
-    const { data } = await supabase.from("profiles").select("display_name").eq("id", userId).single();
+    const { data } = await supabase.from("profiles").select("display_name, is_admin").eq("id", userId).single();
     setProfile(data || null);
   }, []);
 
   useEffect(() => {
     if (session?.user) {
       fetchWords();
+      fetchClassWords();
       fetchProfile(session.user.id);
     } else {
       setWords([]);
+      setClassWords([]);
       setProfile(null);
     }
-  }, [session, fetchWords, fetchProfile]);
+  }, [session, fetchWords, fetchClassWords, fetchProfile]);
 
   const setSettings = (next) => {
     setSettingsState(next);
@@ -222,7 +243,35 @@ export default function App() {
     if (error) setWords(prev); // revert on failure
   };
 
-  const handleRecordAttempt = (wordId, correct) => {
+  const handleRecordAttempt = (wordId, source, correct) => {
+    if (source === "class") {
+      setClassWords((prev) =>
+        prev.map((w) =>
+          w.id === wordId
+            ? {
+                ...w,
+                correct_count: w.correct_count + (correct ? 1 : 0),
+                incorrect_count: w.incorrect_count + (correct ? 0 : 1),
+              }
+            : w
+        )
+      );
+      const word = classWords.find((w) => w.id === wordId);
+      if (!word) return;
+      supabase
+        .from("class_word_progress")
+        .upsert(
+          {
+            user_id: session.user.id,
+            class_word_id: wordId,
+            correct_count: word.correct_count + (correct ? 1 : 0),
+            incorrect_count: word.incorrect_count + (correct ? 0 : 1),
+          },
+          { onConflict: "user_id,class_word_id" }
+        )
+        .then(({ error }) => setSaveError(!!error));
+      return;
+    }
     setWords((prev) =>
       prev.map((w) =>
         w.id === wordId
@@ -244,6 +293,31 @@ export default function App() {
       })
       .eq("id", wordId)
       .then(({ error }) => setSaveError(!!error));
+  };
+
+  const handleClassAdd = async (fields) => {
+    const { data, error } = await supabase.from("class_words").insert(fields).select().single();
+    if (error) throw error;
+    setClassWords((prev) => [...prev, { ...data, correct_count: 0, incorrect_count: 0, source: "class" }]);
+  };
+
+  const handleClassBulkAdd = async (list) => {
+    const { data, error } = await supabase.from("class_words").insert(list).select();
+    if (error) throw error;
+    setClassWords((prev) => [...prev, ...(data || []).map((d) => ({ ...d, correct_count: 0, incorrect_count: 0, source: "class" }))]);
+  };
+
+  const handleClassEdit = async (id, fields) => {
+    const { data, error } = await supabase.from("class_words").update(fields).eq("id", id).select().single();
+    if (error) throw error;
+    setClassWords((prev) => prev.map((w) => (w.id === id ? { ...w, ...data } : w)));
+  };
+
+  const handleClassDelete = async (id) => {
+    const prev = classWords;
+    setClassWords((p) => p.filter((w) => w.id !== id));
+    const { error } = await supabase.from("class_words").delete().eq("id", id);
+    if (error) setClassWords(prev);
   };
 
   const handleSignOut = async () => {
@@ -289,20 +363,33 @@ export default function App() {
       <SideDecor words={words} />
       <CultureDoodles />
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px", position: "relative", zIndex: 1 }}>
-        <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} />
+        <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} isAdmin={!!profile?.is_admin} />
         {wordsLoading ? (
           <div style={{ color: COLORS.inkMuted, fontSize: 16, padding: "20px 0" }}>Loading your words…</div>
         ) : tab === "practice" ? (
-          <PracticeView words={words} settings={settings} setSettings={setSettings} onRecordAttempt={handleRecordAttempt} />
+          <PracticeView
+            words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]}
+            settings={settings}
+            setSettings={setSettings}
+            onRecordAttempt={handleRecordAttempt}
+          />
+        ) : tab === "class" ? (
+          <ClassDashboard
+            classWords={classWords}
+            onAdd={handleClassAdd}
+            onBulkAdd={handleClassBulkAdd}
+            onEdit={handleClassEdit}
+            onDelete={handleClassDelete}
+          />
         ) : (
-          <WordsView words={words} onAdd={handleAdd} onBulkAdd={handleBulkAdd} onEdit={handleEdit} onDelete={handleDelete} />
+          <WordsView words={words} classWords={classWords} onAdd={handleAdd} onBulkAdd={handleBulkAdd} onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </div>
     </div>
   );
 }
 
-function Header({ tab, setTab, saveError, displayName, onSignOut }) {
+function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
   return (
     <div className="fvt-animate-in" style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -339,6 +426,17 @@ function Header({ tab, setTab, saveError, displayName, onSignOut }) {
       <div style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
         <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
+        {isAdmin && (
+          <TabButton
+            label={
+              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <Users size={14} /> Class Dashboard
+              </span>
+            }
+            active={tab === "class"}
+            onClick={() => setTab("class")}
+          />
+        )}
       </div>
       {saveError && (
         <div style={{ marginTop: 10, fontSize: 14, color: COLORS.margin }}>
