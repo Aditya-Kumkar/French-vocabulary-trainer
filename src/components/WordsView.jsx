@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Plus, Trash2, Pencil, Check, ListPlus } from "lucide-react";
+import { Plus, Trash2, Pencil, Check, ListPlus, Users } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, Field, EmptyNote } from "../theme";
 
-export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete }) {
+export default function WordsView({ words, classWords, onAdd, onBulkAdd, onEdit, onDelete }) {
   const [mode, setMode] = useState("single"); // single | bulk
   const [english, setEnglish] = useState("");
   const [french, setFrench] = useState("");
@@ -151,6 +151,51 @@ export default function WordsView({ words, onAdd, onBulkAdd, onEdit, onDelete })
           </div>
         )}
       </div>
+
+      {classWords && classWords.length > 0 && (
+        <div style={{ marginBottom: 26 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+            <Users size={16} color={COLORS.gold} />
+            <h2 className="fvt-display" style={{ fontSize: 20, fontWeight: 600, margin: 0 }}>
+              Class words
+            </h2>
+            <span className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint }}>
+              {classWords.length} total
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {classWords.map((w) => {
+              const attempts = w.correct_count + w.incorrect_count;
+              const accuracy = attempts > 0 ? Math.round((w.correct_count / attempts) * 100) : null;
+              return (
+                <div
+                  key={w.id}
+                  style={{
+                    background: COLORS.goldBg,
+                    border: `1px solid ${COLORS.gold}`,
+                    borderRadius: 8,
+                    padding: "12px 14px",
+                  }}
+                >
+                  <div style={{ display: "flex", gap: 10, alignItems: "baseline", flexWrap: "wrap" }}>
+                    <span style={{ fontWeight: 600 }}>{w.english}</span>
+                    <span style={{ color: COLORS.inkFaint }}>—</span>
+                    <span style={{ fontStyle: "italic", color: COLORS.margin }}>{w.french}</span>
+                    <span className="fvt-devanagari" style={{ color: COLORS.inkMuted, fontSize: 16 }}>
+                      {w.hindi}
+                    </span>
+                  </div>
+                  {accuracy !== null && (
+                    <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, marginTop: 4 }}>
+                      {accuracy}% accuracy · {attempts} attempt{attempts !== 1 ? "s" : ""}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
         <h2 className="fvt-display" style={{ fontSize: 20, fontWeight: 600, margin: 0 }}>
