@@ -1,6 +1,6 @@
 export const COLORS = {
-  paper: "#E1DEC9",
-  page: "#F1EEDE",
+  paper: "#EEF0E6",
+  page: "#FBFAF5",
   ink: "#20263A",
   inkMuted: "#5B6275",
   inkFaint: "#8A90A0",
@@ -12,7 +12,7 @@ export const COLORS = {
   gold: "#B8862F",
   goldBg: "#F4E9D3",
   errorBg: "#F7E7E4",
-  border: "#D0CBB4",
+  border: "#DCD9CA",
 };
 
 export const FONTS_CSS = `
@@ -53,15 +53,7 @@ export const FONTS_CSS = `
   background-color: ${COLORS.page};
   background-image:
     radial-gradient(ellipse at 50% 35%, transparent 55%, rgba(32,38,58,0.05) 100%),
-    linear-gradient(90deg, transparent 0, transparent 55px, ${COLORS.margin} 55px, ${COLORS.margin} 57px, transparent 57px),
     repeating-linear-gradient(0deg, transparent, transparent 31px, ${COLORS.ruleFaint} 31px, ${COLORS.ruleFaint} 32px);
-}
-@media (max-width: 900px) {
-  .fvt-seyes {
-    background-image:
-      radial-gradient(ellipse at 50% 35%, transparent 55%, rgba(32,38,58,0.05) 100%),
-      repeating-linear-gradient(0deg, transparent, transparent 31px, ${COLORS.ruleFaint} 31px, ${COLORS.ruleFaint} 32px);
-  }
 }
 
 .fvt-answer-line {
@@ -85,6 +77,8 @@ export const FONTS_CSS = `
   .fvt-app-decor { display: none; }
 }
 `;
+
+export const cardShadow = "0 14px 28px rgba(32,38,58,0.20), 0 3px 8px rgba(32,38,58,0.14)";
 
 export const inputStyle = {
   width: "100%",
