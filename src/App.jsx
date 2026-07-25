@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Feather, LogOut, Users } from "lucide-react";
 import { supabase } from "./supabaseClient";
-import { COLORS, FONTS_CSS, cardShadow } from "./theme";
+import { COLORS, FONTS_CSS, cardShadow, Mascot } from "./theme";
 import Auth from "./components/Auth.jsx";
 import WordsView from "./components/WordsView.jsx";
 import PracticeView from "./components/PracticeView.jsx";
@@ -133,6 +133,27 @@ function CultureDoodles() {
       <CroissantDoodle style={{ right: "6%", top: "50%" }} />
       <BeretDoodle style={{ left: "4%", top: "94%" }} />
     </>
+  );
+}
+
+function CornerMascot() {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: 14,
+        right: 14,
+        zIndex: 5,
+        background: COLORS.page,
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: "50%",
+        padding: 6,
+        boxShadow: cardShadow,
+      }}
+      aria-hidden="true"
+    >
+      <Mascot size={38} />
+    </div>
   );
 }
 
@@ -328,6 +349,7 @@ export default function App() {
     return (
       <div className="fvt-seyes" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.inkMuted }}>
         <style>{FONTS_CSS}</style>
+        <CornerMascot />
         Opening your cahier…
       </div>
     );
@@ -337,6 +359,7 @@ export default function App() {
     return (
       <div className="fvt-root" style={{ minHeight: "100vh", color: COLORS.ink }}>
         <style>{FONTS_CSS}</style>
+        <CornerMascot />
         <Auth />
       </div>
     );
@@ -362,6 +385,7 @@ export default function App() {
       />
       <SideDecor words={words} />
       <CultureDoodles />
+      <CornerMascot />
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px", position: "relative", zIndex: 1 }}>
         <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} isAdmin={!!profile?.is_admin} />
         {wordsLoading ? (
