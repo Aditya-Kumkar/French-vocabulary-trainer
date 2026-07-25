@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Check, X, RotateCcw, ChevronRight, Flame, PenLine } from "lucide-react";
-import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Field, EmptyNote } from "../theme";
+import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, Field, EmptyNote } from "../theme";
 
 function stripDiacritics(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -265,10 +265,32 @@ function SessionSummary({ session, onRestart, onChangeSettings }) {
   const pct = total > 0 ? Math.round((session.score / total) * 100) : 0;
   return (
     <div className="fvt-animate-in" style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 22 }}>
-      <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+        <div
+          style={{
+            position: "relative",
+            width: 96,
+            height: 96,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${COLORS.goldBg} 0%, transparent 70%)`,
+            }}
+          />
+          <Mascot size={80} style={{ position: "relative" }} />
+        </div>
+      </div>
+      <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "center" }}>
         Session complete
       </div>
-      <div className="fvt-display" style={{ fontSize: 36, fontWeight: 600, margin: "6px 0 4px" }}>
+      <div className="fvt-display" style={{ fontSize: 36, fontWeight: 600, margin: "6px 0 4px", textAlign: "center" }}>
         {session.score} / {total} <span style={{ fontSize: 20, color: COLORS.inkMuted, fontWeight: 400 }}>({pct}%)</span>
       </div>
 
