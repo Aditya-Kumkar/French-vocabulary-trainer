@@ -140,6 +140,34 @@ export function Field({ label, children }) {
   );
 }
 
+export function Mascot({ size = 48, style }) {
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} style={{ display: "block", ...style }}>
+      <g stroke={COLORS.ink} strokeWidth="2.5" strokeLinecap="round" fill="none">
+        <path d="M30 58 C14 50 10 32 18 18" />
+        <path d="M34 64 C20 60 14 44 20 30" />
+        <path d="M40 68 C28 68 20 56 22 42" />
+      </g>
+      <ellipse cx="56" cy="60" rx="26" ry="22" fill={COLORS.page} stroke={COLORS.ink} strokeWidth="2.5" />
+      <circle cx="66" cy="32" r="15" fill={COLORS.page} stroke={COLORS.ink} strokeWidth="2.5" />
+      <path
+        d="M56 20 L59 10 L63 18 L66 8 L69 18 L73 12 L75 22"
+        fill="none"
+        stroke={COLORS.margin}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M72 40 C75 44 74 49 70 51" fill="none" stroke={COLORS.margin} strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M80 30 L90 33 L80 37 Z" fill={COLORS.gold} />
+      <circle cx="70" cy="29" r="1.8" fill={COLORS.ink} />
+      <ellipse cx="58" cy="20" rx="12" ry="6" fill={COLORS.margin} opacity="0.85" stroke={COLORS.ink} strokeWidth="1.3" />
+      <circle cx="58" cy="14" r="2" fill={COLORS.ink} />
+      <path d="M46 80 L44 92 M62 82 L64 93" stroke={COLORS.ink} strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function EmptyNote({ text }) {
   return (
     <div
