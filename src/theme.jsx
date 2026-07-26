@@ -142,28 +142,57 @@ export function Field({ label, children }) {
 
 export function Mascot({ size = 48, style }) {
   return (
-    <svg viewBox="0 0 100 100" width={size} height={size} style={{ display: "block", ...style }}>
-      <g stroke={COLORS.ink} strokeWidth="2.5" strokeLinecap="round" fill="none">
-        <path d="M30 58 C14 50 10 32 18 18" />
-        <path d="M34 64 C20 60 14 44 20 30" />
-        <path d="M40 68 C28 68 20 56 22 42" />
+    <svg viewBox="0 0 100 100" width={size} height={size} style={{ display: "block", filter: "drop-shadow(1px 4px 5px rgba(32,38,58,0.25))", ...style }}>
+      <defs>
+        <linearGradient id="mascotBody" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#EFC276" />
+          <stop offset="55%" stopColor="#D9A24B" />
+          <stop offset="100%" stopColor="#A87524" />
+        </linearGradient>
+        <linearGradient id="mascotHead" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#F2CA84" />
+          <stop offset="100%" stopColor="#D9A24B" />
+        </linearGradient>
+        <linearGradient id="mascotComb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#D14A3E" />
+          <stop offset="100%" stopColor="#7A2119" />
+        </linearGradient>
+        <linearGradient id="tailA" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#5FA588" />
+          <stop offset="100%" stopColor="#2C4A3E" />
+        </linearGradient>
+        <linearGradient id="tailB" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#4A8068" />
+          <stop offset="100%" stopColor="#1F362D" />
+        </linearGradient>
+        <linearGradient id="tailC" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#6FB89A" />
+          <stop offset="100%" stopColor="#345A48" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="52" cy="94" rx="20" ry="4" fill={COLORS.ink} opacity="0.12" />
+      <g strokeWidth="2.5" strokeLinecap="round" fill="none">
+        <path d="M30 58 C14 50 10 32 18 18" stroke="url(#tailA)" />
+        <path d="M34 64 C20 60 14 44 20 30" stroke="url(#tailB)" />
+        <path d="M40 68 C28 68 20 56 22 42" stroke="url(#tailC)" />
       </g>
-      <ellipse cx="56" cy="60" rx="26" ry="22" fill={COLORS.page} stroke={COLORS.ink} strokeWidth="2.5" />
-      <circle cx="66" cy="32" r="15" fill={COLORS.page} stroke={COLORS.ink} strokeWidth="2.5" />
+      <ellipse cx="56" cy="60" rx="26" ry="22" fill="url(#mascotBody)" stroke={COLORS.ink} strokeWidth="2.5" />
+      <path d="M40 52 C48 58 48 68 42 76" stroke="#A87524" strokeWidth="1" opacity="0.5" fill="none" />
+      <circle cx="66" cy="32" r="15" fill="url(#mascotHead)" stroke={COLORS.ink} strokeWidth="2.5" />
       <path
         d="M56 20 L59 10 L63 18 L66 8 L69 18 L73 12 L75 22"
-        fill="none"
-        stroke={COLORS.margin}
-        strokeWidth="2.5"
+        fill="url(#mascotComb)"
+        stroke="#5C1712"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M72 40 C75 44 74 49 70 51" fill="none" stroke={COLORS.margin} strokeWidth="2.2" strokeLinecap="round" />
-      <path d="M80 30 L90 33 L80 37 Z" fill={COLORS.gold} />
+      <path d="M72 40 C75 44 74 49 70 51" fill="none" stroke="url(#mascotComb)" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M80 30 L90 33 L80 37 Z" fill={COLORS.gold} stroke="#8A6412" strokeWidth="1" />
       <circle cx="70" cy="29" r="1.8" fill={COLORS.ink} />
-      <ellipse cx="58" cy="20" rx="12" ry="6" fill={COLORS.margin} opacity="0.85" stroke={COLORS.ink} strokeWidth="1.3" />
-      <circle cx="58" cy="14" r="2" fill={COLORS.ink} />
-      <path d="M46 80 L44 92 M62 82 L64 93" stroke={COLORS.ink} strokeWidth="2.5" strokeLinecap="round" />
+      <ellipse cx="58" cy="20" rx="12" ry="6" fill="url(#mascotComb)" opacity="0.95" stroke="#5C1712" strokeWidth="1.3" />
+      <circle cx="58" cy="14" r="2" fill="#5C1712" />
+      <path d="M46 80 L44 92 M62 82 L64 93" stroke={COLORS.gold} strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   );
 }
