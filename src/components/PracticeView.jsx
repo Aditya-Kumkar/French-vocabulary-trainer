@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, X, RotateCcw, ChevronRight, Flame, PenLine } from "lucide-react";
+import { Check, X, RotateCcw, ChevronRight, Flame, PenLine, Sparkles } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, Field, EmptyNote } from "../theme";
 
 function stripDiacritics(str) {
@@ -25,10 +25,23 @@ function buildQueue(words, settings) {
     if (pool.length === 0) pool = words;
   }
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  return shuffled.map((w) => {
+  const queue = [];
+  shuffled.forEach((w) => {
+    const isNew = w.correct_count + w.incorrect_count === 0;
+    if (isNew) {
+      queue.push({
+        type: "intro",
+        wordId: w.id,
+        source: w.source,
+        english: w.english,
+        french: w.french,
+        hindi: w.hindi,
+      });
+    }
     const direction = settings.direction === "mixed" ? (Math.random() < 0.5 ? "en2fr" : "fr2en") : settings.direction;
     const answerIsFrench = direction === "en2fr";
-    return {
+    queue.push({
+      type: "quiz",
       wordId: w.id,
       source: w.source,
       hindi: w.hindi,
@@ -37,8 +50,9 @@ function buildQueue(words, settings) {
       answerLabel: answerIsFrench ? "French" : "English",
       correctAnswer: answerIsFrench ? w.french : w.english,
       answerIsFrench,
-    };
+    });
   });
+  return queue;
 }
 
 export default function PracticeView({ words, settings, setSettings, onRecordAttempt }) {
@@ -59,7 +73,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
   const currentQ = session && session.index < session.queue.length ? session.queue[session.index] : null;
 
   const submit = () => {
-    if (!currentQ || answered) return;
+    if (!currentQ || currentQ.type !== "quiz" || answered) return;
     const opts = { ignoreAccents: currentQ.answerIsFrench && settings.ignoreAccents };
     const correct = normalizeAnswer(answer, opts) === normalizeAnswer(currentQ.correctAnswer, opts);
     setIsCorrect(correct);
@@ -121,18 +135,24 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
     return <SessionSummary session={session} onRestart={startSession} onChangeSettings={() => setSession(null)} />;
   }
 
+  const totalQuizSteps = session.queue.filter((q) => q.type === "quiz").length;
+  const quizPositionSoFar = session.queue.slice(0, session.index + 1).filter((q) => q.type === "quiz").length;
+
   return (
     <div className="fvt-animate-in">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, fontSize: 14, color: COLORS.inkMuted }}>
         <span className="fvt-mono">
-          Question {session.index + 1} of {session.queue.length}
+          {currentQ.type === "intro" ? "New word" : `Question ${quizPositionSoFar} of ${totalQuizSteps}`}
         </span>
         <span className="fvt-mono" style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <Flame size={14} color={COLORS.gold} /> {session.score} correct
         </span>
       </div>
 
-      <div
+      {currentQ.type === "intro" ? (
+        <IntroCard item={currentQ} onContinue={next} />
+      ) : (
+        <div
         style={{
           background: COLORS.page,
           border: `1px solid ${COLORS.border}`,
@@ -215,6 +235,70 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
           )}
         </div>
       </div>
+      )}
+    </div>
+  );
+}
+
+function IntroCard({ item, onContinue }) {
+  return (
+    <div
+      className="fvt-animate-in"
+      style={{
+        background: COLORS.page,
+        border: `1px solid ${COLORS.border}`,
+        borderRadius: 10,
+        padding: "24px 24px 24px 28px",
+        boxShadow: cardShadow,
+      }}
+    >
+      <div
+        className="fvt-mono"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          fontSize: 13,
+          color: COLORS.gold,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: 20,
+        }}
+      >
+        <Sparkles size={14} /> First time seeing this one — take a moment to learn it
+      </div>
+
+      <div className="fvt-devanagari" style={{ fontSize: 32, color: COLORS.inkMuted, marginBottom: 4 }}>
+        {item.hindi}
+      </div>
+      <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, marginBottom: 22, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        pronunciation
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 26 }}>
+        <div>
+          <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+            English
+          </div>
+          <div className="fvt-display" style={{ fontSize: 26, fontWeight: 600 }}>
+            {item.english}
+          </div>
+        </div>
+        <div>
+          <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+            French
+          </div>
+          <div className="fvt-display" style={{ fontSize: 26, fontWeight: 600, fontStyle: "italic", color: COLORS.margin }}>
+            {item.french}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <button onClick={onContinue} style={primaryBtnStyle}>
+          Got it — quiz me <ChevronRight size={15} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -261,7 +345,7 @@ function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
 }
 
 function SessionSummary({ session, onRestart, onChangeSettings }) {
-  const total = session.queue.length;
+  const total = session.queue.filter((q) => q.type === "quiz").length;
   const pct = total > 0 ? Math.round((session.score / total) * 100) : 0;
   return (
     <div className="fvt-animate-in" style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 22 }}>
