@@ -69,59 +69,250 @@ function SideDecor({ words }) {
   );
 }
 
-function EiffelTowerDoodle({ style }) {
+function DoodleShadow({ cx, cy, rx, ry, id }) {
+  return (
+    <>
+      <defs>
+        <radialGradient id={id}>
+          <stop offset="0%" stopColor="#000000" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={`url(#${id})`} />
+    </>
+  );
+}
+
+function PineSprigDoodle({ style }) {
+  const greenLight = "#6B8A62";
+  const green = "#4C6A4A";
+  const greenDark = "#2F4527";
+  const brownLight = "#A47C54";
+  const brown = "#8A6142";
+  const brownDark = "#5F4128";
   return (
     <svg
       className="fvt-app-decor"
-      viewBox="0 0 64 96"
-      width="52"
-      height="78"
-      style={{ position: "fixed", zIndex: 0, opacity: 0.5, ...style }}
+      viewBox="0 0 110 110"
+      width="98"
+      height="98"
+      style={{ position: "fixed", zIndex: 0, filter: "drop-shadow(2px 6px 6px rgba(32,38,58,0.22))", ...style }}
     >
-      <g fill="none" stroke={COLORS.ink} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M32 6 L26 34 L10 90 M32 6 L38 34 L54 90" />
-        <path d="M20 34 H44" />
-        <path d="M14 60 H50" />
-        <path d="M10 90 H24 M40 90 H54" />
-        <path d="M28 18 H36" />
+      <defs>
+        <linearGradient id="pineNeedle" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={greenLight} />
+          <stop offset="100%" stopColor={greenDark} />
+        </linearGradient>
+        <radialGradient id="pineCone" cx="35%" cy="30%" r="75%">
+          <stop offset="0%" stopColor={brownLight} />
+          <stop offset="70%" stopColor={brown} />
+          <stop offset="100%" stopColor={brownDark} />
+        </radialGradient>
+      </defs>
+      <DoodleShadow id="pineShadow" cx="55" cy="98" rx="42" ry="8" />
+      <path d="M24 96 C26 68 36 44 56 24" stroke={green} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      {[...Array(8)].map((_, i) => {
+        const t = i / 7;
+        const x = 24 + 32 * t;
+        const y = 96 - 70 * t;
+        const len = 20 - t * 6;
+        return (
+          <g key={i} stroke="url(#pineNeedle)" strokeWidth="2.4" strokeLinecap="round">
+            <path d={`M${x} ${y} l ${-len} ${-len * 0.35}`} />
+            <path d={`M${x} ${y} l ${len * 0.85} ${-len * 0.5}`} />
+            <path d={`M${x} ${y} l ${-len * 0.5} ${len * 0.3}`} opacity="0.85" />
+          </g>
+        );
+      })}
+      <ellipse cx="30" cy="82" rx="9.5" ry="13" fill="url(#pineCone)" stroke={brownDark} strokeWidth="1" transform="rotate(-18 30 82)" />
+      <ellipse cx="18" cy="64" rx="7.5" ry="10.5" fill="url(#pineCone)" stroke={brownDark} strokeWidth="1" transform="rotate(-25 18 64)" />
+      <g stroke={brownDark} strokeWidth="0.6" opacity="0.5">
+        <path d="M25 74 h10 M25 78 h10 M25 82 h10 M25 86 h10" />
+      </g>
+      <circle cx="56" cy="24" r="3.2" fill={greenLight} />
+    </svg>
+  );
+}
+
+function MapEiffelDoodle({ style }) {
+  return (
+    <svg
+      className="fvt-app-decor"
+      viewBox="0 0 110 110"
+      width="94"
+      height="94"
+      style={{ position: "fixed", zIndex: 0, filter: "drop-shadow(2px 8px 8px rgba(32,38,58,0.25))", ...style, transform: "rotate(-5deg)" }}
+    >
+      <defs>
+        <linearGradient id="mapPaperBack" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#F1E6C8" />
+          <stop offset="100%" stopColor="#DCC9A0" />
+        </linearGradient>
+        <linearGradient id="mapPaperFront" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#E7D6AC" />
+          <stop offset="100%" stopColor="#CEB689" />
+        </linearGradient>
+        <linearGradient id="towerMetal" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#8A6A3C" />
+          <stop offset="45%" stopColor="#C79A56" />
+          <stop offset="100%" stopColor="#6E4F26" />
+        </linearGradient>
+      </defs>
+      <DoodleShadow id="mapShadow" cx="45" cy="94" rx="38" ry="8" />
+      <rect x="10" y="12" width="68" height="78" rx="3" fill="url(#mapPaperBack)" stroke="#8A7350" strokeWidth="1.4" transform="rotate(6 44 51)" />
+      <rect x="20" y="18" width="68" height="78" rx="3" fill="url(#mapPaperFront)" stroke="#8A7350" strokeWidth="1.4" transform="rotate(-4 54 57)" />
+      <g stroke={COLORS.margin} strokeWidth="1" opacity="0.55" transform="rotate(-4 54 57)">
+        <path d="M28 34 Q50 22 74 38" fill="none" />
+        <path d="M24 56 Q56 48 80 64" fill="none" />
+        <path d="M30 74 Q52 68 70 80" fill="none" />
+        <circle cx="46" cy="44" r="1.7" fill={COLORS.margin} stroke="none" />
+        <circle cx="64" cy="58" r="1.7" fill={COLORS.margin} stroke="none" />
+      </g>
+      <text x="30" y="30" fontSize="6" fill="#7A5F38" fontFamily="serif" opacity="0.7" transform="rotate(-4 54 57)">
+        FRANCE
+      </text>
+      <g stroke="url(#towerMetal)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none">
+        <path d="M56 86 L49 60 L38 22 M56 86 L63 60 L74 22" />
+        <path d="M45 60 H67" />
+        <path d="M41 72 H71" />
+        <path d="M38 22 H74" />
+        <path d="M52 12 H60" />
+        <path d="M44 46 L68 46" opacity="0.7" />
       </g>
     </svg>
   );
 }
 
-function CroissantDoodle({ style }) {
+function BeretPinDoodle({ style }) {
   return (
     <svg
       className="fvt-app-decor"
-      viewBox="0 0 80 50"
-      width="66"
-      height="42"
-      style={{ position: "fixed", zIndex: 0, opacity: 0.6, ...style }}
+      viewBox="0 0 100 78"
+      width="88"
+      height="68"
+      style={{ position: "fixed", zIndex: 0, filter: "drop-shadow(2px 6px 6px rgba(32,38,58,0.22))", ...style }}
     >
-      <path
-        d="M8 30 C10 10 35 4 50 10 C40 14 30 22 28 34 C42 28 58 22 68 26 C60 36 40 46 22 44 C12 42 6 38 8 30 Z"
-        fill={COLORS.gold}
-        stroke={COLORS.ink}
-        strokeWidth="1.4"
-        opacity="0.85"
-      />
-      <path d="M20 20 L26 26 M32 16 L38 22 M44 14 L50 20" stroke={COLORS.ink} strokeWidth="1.1" opacity="0.5" />
+      <defs>
+        <radialGradient id="beretWool" cx="38%" cy="32%" r="75%">
+          <stop offset="0%" stopColor="#D14A3E" />
+          <stop offset="55%" stopColor={COLORS.margin} />
+          <stop offset="100%" stopColor="#7A2119" />
+        </radialGradient>
+        <radialGradient id="pinShine" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FBEFC4" />
+          <stop offset="55%" stopColor={COLORS.gold} />
+          <stop offset="100%" stopColor="#8A6412" />
+        </radialGradient>
+      </defs>
+      <DoodleShadow id="beretShadow" cx="50" cy="66" rx="38" ry="8" />
+      <ellipse cx="50" cy="42" rx="40" ry="21" fill="url(#beretWool)" stroke="#5C1712" strokeWidth="1.6" />
+      <ellipse cx="50" cy="35" rx="29" ry="13" fill="none" stroke="#5C1712" strokeWidth="1" opacity="0.4" />
+      <circle cx="50" cy="16" r="3.3" fill="#5C1712" />
+      <g transform="translate(64 48)">
+        <circle r="7.5" fill="url(#pinShine)" stroke="#6E4E0E" strokeWidth="1" />
+        <path d="M-3.5 0 L0 -3.5 L3.5 0 L0 3.5 Z" fill="#FBF3DD" />
+      </g>
     </svg>
   );
 }
 
-function BeretDoodle({ style }) {
+function CroissantBasketDoodle({ style }) {
   return (
     <svg
       className="fvt-app-decor"
-      viewBox="0 0 70 50"
-      width="58"
-      height="41"
-      style={{ position: "fixed", zIndex: 0, opacity: 0.6, ...style }}
+      viewBox="0 0 112 86"
+      width="98"
+      height="76"
+      style={{ position: "fixed", zIndex: 0, filter: "drop-shadow(2px 6px 6px rgba(32,38,58,0.22))", ...style }}
     >
-      <ellipse cx="35" cy="30" rx="28" ry="14" fill={COLORS.margin} opacity="0.8" stroke={COLORS.ink} strokeWidth="1.4" />
-      <ellipse cx="35" cy="26" rx="20" ry="9" fill="none" stroke={COLORS.ink} strokeWidth="1" opacity="0.35" />
-      <circle cx="35" cy="12" r="3" fill={COLORS.ink} />
+      <defs>
+        <linearGradient id="basketWeave" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#C49A66" />
+          <stop offset="100%" stopColor="#8C6A3E" />
+        </linearGradient>
+        <linearGradient id="croissantGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#EFC276" />
+          <stop offset="60%" stopColor="#D9A24B" />
+          <stop offset="100%" stopColor="#A87524" />
+        </linearGradient>
+        <linearGradient id="baguetteGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#F0DDA9" />
+          <stop offset="100%" stopColor="#D2AE71" />
+        </linearGradient>
+      </defs>
+      <DoodleShadow id="basketShadow" cx="56" cy="80" rx="46" ry="9" />
+      <path d="M12 44 h88 l-9 33 a7 7 0 0 1 -7 5.5 h-56 a7 7 0 0 1 -7 -5.5 Z" fill="url(#basketWeave)" stroke="#6B4E29" strokeWidth="1.6" />
+      <g stroke="#6B4E29" strokeWidth="1" opacity="0.55">
+        <path d="M18 50 h76 M16 58 h80 M20 66 h72 M24 74 h64" />
+        <path d="M24 44 L18 79 M40 44 L36 80 M56 44 L56 80 M72 44 L76 80 M88 44 L94 79" opacity="0.35" />
+      </g>
+      <path d="M8 44 Q56 30 104 44" fill="none" stroke="#6B4E29" strokeWidth="2" />
+      <path
+        d="M24 46 C26 26 46 16 60 21 C50 26 40 33 38 44 C52 34 68 32 78 39 C68 44 56 50 50 46 C42 50 30 50 24 46 Z"
+        fill="url(#croissantGold)"
+        stroke="#8A5E1E"
+        strokeWidth="1.3"
+      />
+      <g stroke="#8A5E1E" strokeWidth="0.7" opacity="0.6">
+        <path d="M32 32 q6 4 4 10 M46 26 q6 3 5 9 M60 30 q5 3 4 8" />
+      </g>
+      <rect x="64" y="12" width="11" height="40" rx="4.5" fill="url(#baguetteGold)" stroke="#8A5E1E" strokeWidth="1.3" transform="rotate(12 69 32)" />
+      <g stroke="#8A5E1E" strokeWidth="0.8" opacity="0.6" transform="rotate(12 69 32)">
+        <path d="M66 18 l5 7 M66 27 l5 7 M66 36 l5 7" />
+      </g>
+    </svg>
+  );
+}
+
+function GrapevineDoodle({ style }) {
+  const grapeLight = "#9B7CAC";
+  const grape = "#7B5C8C";
+  const grapeDark = "#4C3758";
+  const leaf = "#6B8A56";
+  const leafDark = "#3F5230";
+  return (
+    <svg
+      className="fvt-app-decor"
+      viewBox="0 0 92 104"
+      width="80"
+      height="90"
+      style={{ position: "fixed", zIndex: 0, filter: "drop-shadow(2px 6px 6px rgba(32,38,58,0.2))", ...style }}
+    >
+      <defs>
+        <radialGradient id="grapeShine" cx="35%" cy="28%" r="75%">
+          <stop offset="0%" stopColor={grapeLight} />
+          <stop offset="65%" stopColor={grape} />
+          <stop offset="100%" stopColor={grapeDark} />
+        </radialGradient>
+        <linearGradient id="vineLeaf" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={leaf} />
+          <stop offset="100%" stopColor={leafDark} />
+        </linearGradient>
+      </defs>
+      <DoodleShadow id="vineShadow" cx="42" cy="98" rx="34" ry="8" />
+      <path d="M46 4 C48 22 44 34 39 46" stroke="#6B5334" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      <path d="M44 18 C38 14 32 16 30 22" stroke="#6B5334" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+      <path
+        d="M39 22 C24 18 14 27 16 38 C27 33 34 28 39 22 Z"
+        fill="url(#vineLeaf)"
+        stroke={leafDark}
+        strokeWidth="1.2"
+      />
+      <path d="M39 22 C32 26 24 30 18 34" stroke={leafDark} strokeWidth="0.7" fill="none" opacity="0.6" />
+      {[
+        [34, 52],
+        [48, 52],
+        [27, 63],
+        [41, 63],
+        [55, 63],
+        [34, 74],
+        [48, 74],
+        [27, 85],
+        [41, 85],
+        [42, 94],
+      ].map(([cx, cy], i) => (
+        <circle key={i} cx={cx} cy={cy} r="7.8" fill="url(#grapeShine)" stroke={grapeDark} strokeWidth="0.8" />
+      ))}
     </svg>
   );
 }
@@ -129,9 +320,11 @@ function BeretDoodle({ style }) {
 function CultureDoodles() {
   return (
     <>
-      <EiffelTowerDoodle style={{ left: "8%", top: "44%" }} />
-      <CroissantDoodle style={{ right: "6%", top: "50%" }} />
-      <BeretDoodle style={{ left: "4%", top: "94%" }} />
+      <PineSprigDoodle style={{ left: "2%", top: "4%" }} />
+      <MapEiffelDoodle style={{ right: "3%", top: "4%" }} />
+      <BeretPinDoodle style={{ left: "1%", top: "66%" }} />
+      <CroissantBasketDoodle style={{ left: "2%", top: "86%" }} />
+      <GrapevineDoodle style={{ right: "4%", top: "66%" }} />
     </>
   );
 }
