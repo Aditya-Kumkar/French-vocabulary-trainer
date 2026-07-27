@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { Feather, LogOut, Users } from "lucide-react";
+import { Feather, LogOut, Users, BookOpen } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { COLORS, FONTS_CSS, cardShadow, Mascot } from "./theme";
 import Auth from "./components/Auth.jsx";
 import WordsView from "./components/WordsView.jsx";
 import PracticeView from "./components/PracticeView.jsx";
 import ClassDashboard from "./components/ClassDashboard.jsx";
+import SentencesView from "./components/SentencesView.jsx";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false };
 const SETTINGS_KEY = "fvt-settings";
@@ -364,6 +365,7 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [words, setWords] = useState([]);
   const [classWords, setClassWords] = useState([]);
+  const [sentences, setSentences] = useState([]);
   const [wordsLoading, setWordsLoading] = useState(true);
   const [tab, setTab] = useState("practice");
   const [settings, setSettingsState] = useState(loadSettings);
@@ -399,6 +401,11 @@ export default function App() {
     setClassWords(merged);
   }, []);
 
+  const fetchSentences = useCallback(async () => {
+    const { data, error } = await supabase.from("sentences").select("*").order("created_at", { ascending: true });
+    if (!error) setSentences(data || []);
+  }, []);
+
   const fetchProfile = useCallback(async (userId) => {
     const { data } = await supabase.from("profiles").select("display_name, is_admin").eq("id", userId).single();
     setProfile(data || null);
@@ -408,13 +415,15 @@ export default function App() {
     if (session?.user) {
       fetchWords();
       fetchClassWords();
+      fetchSentences();
       fetchProfile(session.user.id);
     } else {
       setWords([]);
       setClassWords([]);
+      setSentences([]);
       setProfile(null);
     }
-  }, [session, fetchWords, fetchClassWords, fetchProfile]);
+  }, [session, fetchWords, fetchClassWords, fetchSentences, fetchProfile]);
 
   const setSettings = (next) => {
     setSettingsState(next);
@@ -534,6 +543,62 @@ export default function App() {
     if (error) setClassWords(prev);
   };
 
+  const handleSentenceAdd = async (fields) => {
+    const userId = session.user.id;
+    const { data, error } = await supabase
+      .from("sentences")
+      .insert({ ...fields, user_id: userId, correct_count: 0, incorrect_count: 0 })
+      .select()
+      .single();
+    if (error) throw error;
+    setSentences((prev) => [...prev, data]);
+  };
+
+  const handleSentenceBulkAdd = async (list) => {
+    const userId = session.user.id;
+    const rows = list.map((s) => ({ ...s, user_id: userId, correct_count: 0, incorrect_count: 0 }));
+    const { data, error } = await supabase.from("sentences").insert(rows).select();
+    if (error) throw error;
+    setSentences((prev) => [...prev, ...(data || [])]);
+  };
+
+  const handleSentenceEdit = async (id, fields) => {
+    const { data, error } = await supabase.from("sentences").update(fields).eq("id", id).select().single();
+    if (error) throw error;
+    setSentences((prev) => prev.map((s) => (s.id === id ? data : s)));
+  };
+
+  const handleSentenceDelete = async (id) => {
+    const prev = sentences;
+    setSentences((p) => p.filter((s) => s.id !== id));
+    const { error } = await supabase.from("sentences").delete().eq("id", id);
+    if (error) setSentences(prev);
+  };
+
+  const handleSentenceRecordAttempt = (sentenceId, correct) => {
+    setSentences((prev) =>
+      prev.map((s) =>
+        s.id === sentenceId
+          ? {
+              ...s,
+              correct_count: s.correct_count + (correct ? 1 : 0),
+              incorrect_count: s.incorrect_count + (correct ? 0 : 1),
+            }
+          : s
+      )
+    );
+    const sentence = sentences.find((s) => s.id === sentenceId);
+    if (!sentence) return;
+    supabase
+      .from("sentences")
+      .update({
+        correct_count: sentence.correct_count + (correct ? 1 : 0),
+        incorrect_count: sentence.incorrect_count + (correct ? 0 : 1),
+      })
+      .eq("id", sentenceId)
+      .then(({ error }) => setSaveError(!!error));
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
   };
@@ -598,6 +663,15 @@ export default function App() {
             onEdit={handleClassEdit}
             onDelete={handleClassDelete}
           />
+        ) : tab === "sentences" ? (
+          <SentencesView
+            sentences={sentences}
+            onAdd={handleSentenceAdd}
+            onBulkAdd={handleSentenceBulkAdd}
+            onEdit={handleSentenceEdit}
+            onDelete={handleSentenceDelete}
+            onRecordAttempt={handleSentenceRecordAttempt}
+          />
         ) : (
           <WordsView words={words} classWords={classWords} onAdd={handleAdd} onBulkAdd={handleBulkAdd} onEdit={handleEdit} onDelete={handleDelete} />
         )}
@@ -643,6 +717,15 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
       <div style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
         <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
+        <TabButton
+          label={
+            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <BookOpen size={14} /> Sentences
+            </span>
+          }
+          active={tab === "sentences"}
+          onClick={() => setTab("sentences")}
+        />
         {isAdmin && (
           <TabButton
             label={
