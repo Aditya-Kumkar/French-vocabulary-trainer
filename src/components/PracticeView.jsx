@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Check, X, RotateCcw, ChevronRight, Flame, PenLine, Sparkles } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, Field, EmptyNote } from "../theme";
+import MatchGame from "./MatchGame.jsx";
 
 function stripDiacritics(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -56,6 +57,7 @@ function buildQueue(words, settings) {
 }
 
 export default function PracticeView({ words, settings, setSettings, onRecordAttempt }) {
+  const [mode, setMode] = useState("write");
   const [session, setSession] = useState(null); // { queue, index, score, mistakes }
   const [answer, setAnswer] = useState("");
   const [answered, setAnswered] = useState(false);
@@ -115,9 +117,26 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
     else next();
   };
 
+  const modeToggle = (
+    <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
+      <ModeButton label="Write" active={mode === "write"} onClick={() => setMode("write")} />
+      <ModeButton label="Match" active={mode === "match"} onClick={() => setMode("match")} />
+    </div>
+  );
+
+  if (mode === "match") {
+    return (
+      <div className="fvt-animate-in">
+        {modeToggle}
+        <MatchGame words={words} />
+      </div>
+    );
+  }
+
   if (words.length === 0) {
     return (
       <div className="fvt-animate-in">
+        {modeToggle}
         <EmptyNote text="You'll need a few words in your notebook before you can practice — add some in the My Words tab." />
       </div>
     );
@@ -126,13 +145,19 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
   if (!session) {
     return (
       <div className="fvt-animate-in">
+        {modeToggle}
         <SettingsPanel settings={settings} setSettings={setSettings} onStart={startSession} wordCount={words.length} />
       </div>
     );
   }
 
   if (session.index >= session.queue.length) {
-    return <SessionSummary session={session} onRestart={startSession} onChangeSettings={() => setSession(null)} />;
+    return (
+      <div className="fvt-animate-in">
+        {modeToggle}
+        <SessionSummary session={session} onRestart={startSession} onChangeSettings={() => setSession(null)} />
+      </div>
+    );
   }
 
   const totalQuizSteps = session.queue.filter((q) => q.type === "quiz").length;
@@ -140,6 +165,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
 
   return (
     <div className="fvt-animate-in">
+      {modeToggle}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, fontSize: 14, color: COLORS.inkMuted }}>
         <span className="fvt-mono">
           {currentQ.type === "intro" ? "New word" : `Question ${quizPositionSoFar} of ${totalQuizSteps}`}
@@ -153,88 +179,88 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
         <IntroCard item={currentQ} onContinue={next} />
       ) : (
         <div
-        style={{
-          background: COLORS.page,
-          border: `1px solid ${COLORS.border}`,
-          borderRadius: 10,
-          padding: "24px 24px 24px 28px",
-          boxShadow: cardShadow,
-        }}
-      >
-        <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
-          {currentQ.hindi}
-        </div>
-        <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, marginBottom: 18, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          pronunciation
-        </div>
-
-        <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          {currentQ.promptLabel}
-        </div>
-        <div className="fvt-display" style={{ fontSize: 30, fontWeight: 600, marginBottom: 22 }}>
-          {currentQ.promptText}
-        </div>
-
-        <div className="fvt-mono" style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          <PenLine size={13} color={COLORS.margin} />
-          Write the {currentQ.answerLabel} word
-        </div>
-        <input
-          ref={inputRef}
-          value={answer}
-          disabled={answered}
-          onChange={(e) => setAnswer(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="fvt-answer-line"
-          style={{ fontSize: 26, width: "100%", fontFamily: "'Fraunces', serif" }}
-          autoComplete="off"
-          autoCapitalize="off"
-          spellCheck="false"
-        />
-
-        {currentQ.answerIsFrench && !answered && (
-          <div className="fvt-scrollbar" style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" }}>
-            {ACCENT_KEYS.map((ch) => (
-              <button
-                key={ch}
-                onClick={() => insertAccent(ch)}
-                style={{ ...iconBtnStyle, width: 30, height: 30, fontFamily: "'Fraunces', serif", fontSize: 15 }}
-                tabIndex={-1}
-              >
-                {ch}
-              </button>
-            ))}
+          style={{
+            background: COLORS.page,
+            border: `1px solid ${COLORS.border}`,
+            borderRadius: 10,
+            padding: "24px 24px 24px 28px",
+            boxShadow: cardShadow,
+          }}
+        >
+          <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
+            {currentQ.hindi}
           </div>
-        )}
+          <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, marginBottom: 18, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            pronunciation
+          </div>
 
-        {answered && (
-          <div className="fvt-stamp" style={{ marginTop: 18, display: "flex", alignItems: "flex-start", gap: 10 }}>
-            {isCorrect ? <Check size={20} color={COLORS.correct} /> : <X size={20} color={COLORS.margin} />}
-            <div>
-              <div className="fvt-hand" style={{ fontSize: 28, color: isCorrect ? COLORS.correct : COLORS.margin, lineHeight: 1.1 }}>
-                {isCorrect ? "Bravo !" : "Pas tout à fait"}
-              </div>
-              {!isCorrect && (
-                <div style={{ fontSize: 17, color: COLORS.ink, marginTop: 2 }}>
-                  Correct answer: <span style={{ fontWeight: 700 }}>{currentQ.correctAnswer}</span>
-                </div>
-              )}
+          <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            {currentQ.promptLabel}
+          </div>
+          <div className="fvt-display" style={{ fontSize: 30, fontWeight: 600, marginBottom: 22 }}>
+            {currentQ.promptText}
+          </div>
+
+          <div className="fvt-mono" style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+            <PenLine size={13} color={COLORS.margin} />
+            Write the {currentQ.answerLabel} word
+          </div>
+          <input
+            ref={inputRef}
+            value={answer}
+            disabled={answered}
+            onChange={(e) => setAnswer(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="fvt-answer-line"
+            style={{ fontSize: 26, width: "100%", fontFamily: "'Fraunces', serif" }}
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck="false"
+          />
+
+          {currentQ.answerIsFrench && !answered && (
+            <div className="fvt-scrollbar" style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" }}>
+              {ACCENT_KEYS.map((ch) => (
+                <button
+                  key={ch}
+                  onClick={() => insertAccent(ch)}
+                  style={{ ...iconBtnStyle, width: 30, height: 30, fontFamily: "'Fraunces', serif", fontSize: 15 }}
+                  tabIndex={-1}
+                >
+                  {ch}
+                </button>
+              ))}
             </div>
-          </div>
-        )}
-
-        <div style={{ marginTop: 22, display: "flex", justifyContent: "flex-end" }}>
-          {!answered ? (
-            <button onClick={submit} style={primaryBtnStyle} disabled={!answer.trim()}>
-              Check <ChevronRight size={15} />
-            </button>
-          ) : (
-            <button onClick={next} style={primaryBtnStyle}>
-              {session.index + 1 < session.queue.length ? "Next word" : "See results"} <ChevronRight size={15} />
-            </button>
           )}
+
+          {answered && (
+            <div className="fvt-stamp" style={{ marginTop: 18, display: "flex", alignItems: "flex-start", gap: 10 }}>
+              {isCorrect ? <Check size={20} color={COLORS.correct} /> : <X size={20} color={COLORS.margin} />}
+              <div>
+                <div className="fvt-hand" style={{ fontSize: 28, color: isCorrect ? COLORS.correct : COLORS.margin, lineHeight: 1.1 }}>
+                  {isCorrect ? "Bravo !" : "Pas tout à fait"}
+                </div>
+                {!isCorrect && (
+                  <div style={{ fontSize: 17, color: COLORS.ink, marginTop: 2 }}>
+                    Correct answer: <span style={{ fontWeight: 700 }}>{currentQ.correctAnswer}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div style={{ marginTop: 22, display: "flex", justifyContent: "flex-end" }}>
+            {!answered ? (
+              <button onClick={submit} style={primaryBtnStyle} disabled={!answer.trim()}>
+                Check <ChevronRight size={15} />
+              </button>
+            ) : (
+              <button onClick={next} style={primaryBtnStyle}>
+                {session.index + 1 < session.queue.length ? "Next word" : "See results"} <ChevronRight size={15} />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
       )}
     </div>
   );
@@ -300,6 +326,27 @@ function IntroCard({ item, onContinue }) {
         </button>
       </div>
     </div>
+  );
+}
+
+function ModeButton({ label, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        padding: "8px 14px",
+        fontSize: 15,
+        fontWeight: 600,
+        background: "none",
+        border: "none",
+        borderBottom: active ? `2px solid ${COLORS.margin}` : "2px solid transparent",
+        color: active ? COLORS.ink : COLORS.inkMuted,
+        cursor: "pointer",
+        marginBottom: -1,
+      }}
+    >
+      {label}
+    </button>
   );
 }
 
