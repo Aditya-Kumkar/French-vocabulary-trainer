@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Plus, Trash2, Pencil, Check, ListPlus, ChevronRight, X, RotateCcw, Flame, Sparkles, PenLine } from "lucide-react";
-import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, Field, EmptyNote } from "../theme";
+import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, SegmentedControl, Field, EmptyNote } from "../theme";
 
 const BLANK_MARKER = "___";
 
@@ -31,37 +31,20 @@ export default function SentencesView({ sentences, onAdd, onBulkAdd, onEdit, onD
 
   return (
     <div className="fvt-animate-in">
-      <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
-        <SubTabButton label="Practice" active={subTab === "practice"} onClick={() => setSubTab("practice")} />
-        <SubTabButton label="Manage Sentences" active={subTab === "manage"} onClick={() => setSubTab("manage")} />
-      </div>
+      <SegmentedControl
+        options={[
+          { value: "practice", label: "Quiz" },
+          { value: "manage", label: "Manage" },
+        ]}
+        value={subTab}
+        onChange={setSubTab}
+      />
       {subTab === "practice" ? (
         <SentencePractice sentences={sentences} onRecordAttempt={onRecordAttempt} />
       ) : (
         <SentenceManager sentences={sentences} onAdd={onAdd} onBulkAdd={onBulkAdd} onEdit={onEdit} onDelete={onDelete} />
       )}
     </div>
-  );
-}
-
-function SubTabButton({ label, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "8px 14px",
-        fontSize: 15,
-        fontWeight: 600,
-        background: "none",
-        border: "none",
-        borderBottom: active ? `2px solid ${COLORS.margin}` : "2px solid transparent",
-        color: active ? COLORS.ink : COLORS.inkMuted,
-        cursor: "pointer",
-        marginBottom: -1,
-      }}
-    >
-      {label}
-    </button>
   );
 }
 
