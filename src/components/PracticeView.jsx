@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Check, X, RotateCcw, ChevronRight, Flame, PenLine, Sparkles } from "lucide-react";
-import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, Field, EmptyNote } from "../theme";
+import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, SegmentedControl, Field, EmptyNote } from "../theme";
 import MatchGame from "./MatchGame.jsx";
 
 function stripDiacritics(str) {
@@ -118,10 +118,14 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
   };
 
   const modeToggle = (
-    <div style={{ display: "flex", gap: 6, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
-      <ModeButton label="Write" active={mode === "write"} onClick={() => setMode("write")} />
-      <ModeButton label="Match" active={mode === "match"} onClick={() => setMode("match")} />
-    </div>
+    <SegmentedControl
+      options={[
+        { value: "write", label: "Write" },
+        { value: "match", label: "Match" },
+      ]}
+      value={mode}
+      onChange={setMode}
+    />
   );
 
   if (mode === "match") {
@@ -326,27 +330,6 @@ function IntroCard({ item, onContinue }) {
         </button>
       </div>
     </div>
-  );
-}
-
-function ModeButton({ label, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "8px 14px",
-        fontSize: 15,
-        fontWeight: 600,
-        background: "none",
-        border: "none",
-        borderBottom: active ? `2px solid ${COLORS.margin}` : "2px solid transparent",
-        color: active ? COLORS.ink : COLORS.inkMuted,
-        cursor: "pointer",
-        marginBottom: -1,
-      }}
-    >
-      {label}
-    </button>
   );
 }
 
