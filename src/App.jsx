@@ -9,6 +9,7 @@ import ClassDashboard from "./components/ClassDashboard.jsx";
 import SentencesView from "./components/SentencesView.jsx";
 import ExamMode from "./components/ExamMode.jsx";
 import ProgressDashboard from "./components/ProgressDashboard.jsx";
+import { readActivity, recordActivityAttempt, saveActivity } from "./activity.js";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false, spacedRepetition: true };
 const SETTINGS_KEY = "fvt-settings";
@@ -372,6 +373,7 @@ export default function App() {
   const [tab, setTab] = useState("practice");
   const [settings, setSettingsState] = useState(loadSettings);
   const [saveError, setSaveError] = useState(false);
+  const [activity, setActivity] = useState(() => readActivity());
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
@@ -468,7 +470,16 @@ export default function App() {
     if (error) setWords(prev); // revert on failure
   };
 
+  const trackActivity = (correct) => {
+    setActivity((previous) => {
+      const next = recordActivityAttempt(previous, correct);
+      saveActivity(next);
+      return next;
+    });
+  };
+
   const handleRecordAttempt = (wordId, source, correct) => {
+    trackActivity(correct);
     if (source === "class") {
       setClassWords((prev) =>
         prev.map((w) =>
@@ -578,6 +589,7 @@ export default function App() {
   };
 
   const handleSentenceRecordAttempt = (sentenceId, correct) => {
+    trackActivity(correct);
     setSentences((prev) =>
       prev.map((s) =>
         s.id === sentenceId
@@ -666,7 +678,7 @@ export default function App() {
             onDelete={handleClassDelete}
           />
         ) : tab === "progress" ? (
-          <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} />
+          <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} activity={activity} />
         ) : tab === "exam" ? (
           <ExamMode
             words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]}
