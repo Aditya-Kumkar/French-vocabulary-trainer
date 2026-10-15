@@ -340,7 +340,7 @@ function IntroCard({ item, onContinue }) {
 
 function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
   return (
-    <div style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 20 }}>
+    <div className="fvt-review-settings" style={{ background: COLORS.page, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: "clamp(16px, 4vw, 24px)", minWidth: 0 }}>
       <h2 className="fvt-display" style={{ fontSize: 21, fontWeight: 600, marginTop: 0 }}>
         Ready to review?
       </h2>
@@ -357,7 +357,7 @@ function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
           </select>
         </Field>
 
-        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, cursor: "pointer" }}>
+        <label className="fvt-setting-option" style={{ display: "flex", alignItems: "flex-start", gap: 12, fontSize: 16, lineHeight: 1.45, cursor: "pointer" }}>
           <input
             type="checkbox"
             checked={settings.ignoreAccents}
