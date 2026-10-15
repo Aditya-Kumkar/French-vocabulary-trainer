@@ -23,7 +23,7 @@ export default function HomeDashboard({ displayName, words = [], sentences = [],
     </section>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))", gap: 10 }}>
       <button onClick={() => onNavigate("learn")} style={shortcut}><BookOpen size={19} /><span><strong>Learn</strong><small>Lessons and examples</small></span><ArrowRight size={16} /></button>
-      <button onClick={() => onNavigate("practice")} style={shortcut}><Brain size={19} /><span><strong>Practice</strong><small>${words.length} vocabulary items · ${sentences.length} sentences</small></span><ArrowRight size={16} /></button>
+      <button onClick={() => onNavigate("practice")} style={shortcut}><Brain size={19} /><span><strong>Practice</strong><small>{words.length} vocabulary items · {sentences.length} sentences</small></span><ArrowRight size={16} /></button>
       <button onClick={() => onNavigate("progress")} style={shortcut}><Target size={19} /><span><strong>Progress</strong><small>See how far you've come</small></span><ArrowRight size={16} /></button>
     </div>
   </div>;
