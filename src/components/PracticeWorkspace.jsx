@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import PracticeView from "./PracticeView.jsx";
 import SentencesView from "./SentencesView.jsx";
 import SentenceBuilder from "./SentenceBuilder.jsx";
@@ -16,39 +16,67 @@ const SECTIONS = [
 
 export default function PracticeWorkspace(props) {
   const [section, setSection] = useState("vocabulary");
+  const [focusMode, setFocusMode] = useState(false);
+  const focusAnchor = useRef(null);
+  useEffect(() => {
+    if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focusMode, section]);
+
   const { words, classWords, sentences, settings, setSettings, onRecordAttempt, onRecordSentenceAttempt, isAdmin } = props;
   const allWords = [...words.map((word) => ({ ...word, source: "personal" })), ...classWords];
 
   return (
-    <div className="fvt-animate-in" style={{ display: "grid", gap: 18 }}>
-      <div>
-        <h2 className="fvt-display" style={{ fontSize: 28, margin: "0 0 5px" }}>Practice</h2>
-        <p style={{ color: "var(--fvt-muted, #656b78)", lineHeight: 1.5, margin: 0 }}>Choose one activity. Short sessions are enough.</p>
-      </div>
-      <nav className="fvt-activity-picker" aria-label="Choose a practice activity">
-        {SECTIONS.map((item) => (
-          <button
-            key={item.value}
-            type="button"
-            className={section === item.value ? "is-active" : ""}
-            aria-pressed={section === item.value}
-            onClick={() => setSection(item.value)}
-          >
-            {item.label}
-          </button>
-        ))}
-      </nav>
+    <div
+      ref={focusAnchor}
+      className={`fvt-animate-in fvt-practice-workspace${focusMode ? " is-focused" : ""}`}
+      style={{ display: "grid", gap: 18 }}
+    >
+      {!focusMode && (
+        <>
+          <div>
+            <h2 className="fvt-display" style={{ fontSize: 28, margin: "0 0 5px" }}>Practice</h2>
+            <p style={{ color: "var(--fvt-muted, #656b78)", lineHeight: 1.5, margin: 0 }}>Choose one activity. Short sessions are enough.</p>
+          </div>
+          <nav className="fvt-activity-picker" aria-label="Choose a practice activity">
+            {SECTIONS.map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                className={section === item.value ? "is-active" : ""}
+                aria-pressed={section === item.value}
+                onClick={() => { setSection(item.value); setFocusMode(true); }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </>
+      )}
+
+      {focusMode && (
+        <div className="fvt-focus-bar">
+          <div>
+            <span className="fvt-focus-kicker">FOCUS SESSION</span>
+            <strong>{SECTIONS.find((item) => item.value === section)?.label}</strong>
+          </div>
+          <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>
+        </div>
+      )}
+
       {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
       {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
       {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
       {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
       {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
-      {isAdmin && <details style={{ borderTop: "1px solid #e4e0d5", paddingTop: 12 }}>
-        <summary style={{ cursor: "pointer", fontWeight: 600 }}>Class management</summary>
-        <div style={{ marginTop: 12 }}>
-          <ClassDashboard classWords={classWords} onAdd={props.onClassAdd} onBulkAdd={props.onClassBulkAdd} onEdit={props.onClassEdit} onDelete={props.onClassDelete} />
-        </div>
-      </details>}
+
+      {!focusMode && isAdmin && (
+        <details style={{ borderTop: "1px solid #e4e0d5", paddingTop: 12 }}>
+          <summary style={{ cursor: "pointer", fontWeight: 600 }}>Class management</summary>
+          <div style={{ marginTop: 12 }}>
+            <ClassDashboard classWords={classWords} onAdd={props.onClassAdd} onBulkAdd={props.onClassBulkAdd} onEdit={props.onClassEdit} onDelete={props.onClassDelete} />
+          </div>
+        </details>
+      )}
     </div>
   );
 }
