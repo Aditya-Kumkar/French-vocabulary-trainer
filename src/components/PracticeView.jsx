@@ -366,12 +366,12 @@ function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
           Ignore accents when checking French answers (é ≈ e)
         </label>
 
-        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, cursor: "pointer" }}>
+        <label className="fvt-setting-option" style={{ display: "flex", alignItems: "flex-start", gap: 12, fontSize: 16, lineHeight: 1.45, cursor: "pointer" }}>
           <input type="checkbox" checked={settings.weakOnly} onChange={(e) => setSettings({ ...settings, weakOnly: e.target.checked })} />
           Focus on new &amp; struggling words only
         </label>
 
-        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, cursor: "pointer" }}>
+        <label className="fvt-setting-option" style={{ display: "flex", alignItems: "flex-start", gap: 12, fontSize: 16, lineHeight: 1.45, cursor: "pointer" }}>
           <input
             type="checkbox"
             checked={settings.spacedRepetition !== false}
