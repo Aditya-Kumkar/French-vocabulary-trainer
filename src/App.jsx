@@ -11,7 +11,6 @@ import ExamMode from "./components/ExamMode.jsx";
 import ProgressDashboard from "./components/ProgressDashboard.jsx";
 import LearningHub from "./components/LearningHub.jsx";
 import SentenceBuilder from "./components/SentenceBuilder.jsx";
-import SentenceLab from "./components/SentenceLab.jsx";
 import { readActivity, recordActivityAttempt, saveActivity } from "./activity.js";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false, spacedRepetition: true };
@@ -682,8 +681,6 @@ export default function App() {
           <LearningHub onRecordAttempt={(correct) => trackActivity(correct)} />
         ) : tab === "build" ? (
           <SentenceBuilder onRecordAttempt={(correct) => trackActivity(correct)} />
-        ) : tab === "sentence-lab" ? (
-          <SentenceLab onRecordAttempt={(correct) => trackActivity(correct)} />
         ) : tab === "progress" ? (
           <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} activity={activity} />
         ) : tab === "exam" ? (
@@ -701,6 +698,7 @@ export default function App() {
             onEdit={handleSentenceEdit}
             onDelete={handleSentenceDelete}
             onRecordAttempt={handleSentenceRecordAttempt}
+            onRecordLabAttempt={(correct) => trackActivity(correct)}
           />
         ) : (
           <WordsView words={words} classWords={classWords} onAdd={handleAdd} onBulkAdd={handleBulkAdd} onEdit={handleEdit} onDelete={handleDelete} />
@@ -748,7 +746,6 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
         <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BookOpen size={14} /> Learn</span>} active={tab === "learn"} onClick={() => setTab("learn")} />
         <TabButton label="Build a Sentence" active={tab === "build"} onClick={() => setTab("build")} />
-        <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><Sparkles size={14} /> Sentence Lab</span>} active={tab === "sentence-lab"} onClick={() => setTab("sentence-lab")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BarChart3 size={14} /> Progress</span>} active={tab === "progress"} onClick={() => setTab("progress")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><ClipboardCheck size={14} /> Exam Mode</span>} active={tab === "exam"} onClick={() => setTab("exam")} />
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
