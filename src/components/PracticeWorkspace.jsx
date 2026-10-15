@@ -16,10 +16,10 @@ const SECTIONS = [
 
 export default function PracticeWorkspace(props) {
   const [section, setSection] = useState("vocabulary");
-  const [focusMode, setFocusMode] = useState(true);
+  const [focusMode, setFocusMode] = useState(false);
   const focusAnchor = useRef(null);
   useEffect(() => {
-    focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [focusMode, section]);
 
   const { words, classWords, sentences, settings, setSettings, onRecordAttempt, onRecordSentenceAttempt, isAdmin } = props;
@@ -70,16 +70,6 @@ export default function PracticeWorkspace(props) {
             {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
           </div>
         </section>
-      )}
-
-      {!focusMode && (
-        <>
-          {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
-          {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
-          {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
-          {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
-          {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
-        </>
       )}
 
       {!focusMode && isAdmin && (
