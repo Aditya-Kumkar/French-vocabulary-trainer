@@ -9,6 +9,7 @@ import ClassDashboard from "./components/ClassDashboard.jsx";
 import SentencesView from "./components/SentencesView.jsx";
 import ExamMode from "./components/ExamMode.jsx";
 import ProgressDashboard from "./components/ProgressDashboard.jsx";
+import LearningHub from "./components/LearningHub.jsx";
 import { readActivity, recordActivityAttempt, saveActivity } from "./activity.js";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false, spacedRepetition: true };
@@ -675,6 +676,8 @@ export default function App() {
             onEdit={handleClassEdit}
             onDelete={handleClassDelete}
           />
+        ) : tab === "learn" ? (
+          <LearningHub onRecordAttempt={(correct) => trackActivity(correct)} />
         ) : tab === "progress" ? (
           <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} activity={activity} />
         ) : tab === "exam" ? (
@@ -737,6 +740,7 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
       </div>
       <div className="fvt-tabs" aria-label="Main navigation" style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
         <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
+        <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BookOpen size={14} /> Learn</span>} active={tab === "learn"} onClick={() => setTab("learn")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BarChart3 size={14} /> Progress</span>} active={tab === "progress"} onClick={() => setTab("progress")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><ClipboardCheck size={14} /> Exam Mode</span>} active={tab === "exam"} onClick={() => setTab("exam")} />
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
