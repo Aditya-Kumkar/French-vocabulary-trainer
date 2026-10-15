@@ -1,17 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { Feather, LogOut, Users, BookOpen, ClipboardCheck, BarChart3, Sparkles } from "lucide-react";
+import { Feather, LogOut, BookOpen } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { COLORS, FONTS_CSS, cardShadow, Mascot } from "./theme";
 import Auth from "./components/Auth.jsx";
 import WordsView from "./components/WordsView.jsx";
 import PracticeView from "./components/PracticeView.jsx";
-import ClassDashboard from "./components/ClassDashboard.jsx";
-import SentencesView from "./components/SentencesView.jsx";
-import ExamMode from "./components/ExamMode.jsx";
+import HomeDashboard from "./components/HomeDashboard.jsx";
+import PracticeWorkspace from "./components/PracticeWorkspace.jsx";
 import ProgressDashboard from "./components/ProgressDashboard.jsx";
 import LearningHub from "./components/LearningHub.jsx";
-import SentenceBuilder from "./components/SentenceBuilder.jsx";
-import SentenceLab from "./components/SentenceLab.jsx";
 import { readActivity, recordActivityAttempt, saveActivity } from "./activity.js";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false, spacedRepetition: true };
@@ -373,7 +370,7 @@ export default function App() {
   const [classWords, setClassWords] = useState([]);
   const [sentences, setSentences] = useState([]);
   const [wordsLoading, setWordsLoading] = useState(true);
-  const [tab, setTab] = useState("practice");
+  const [tab, setTab] = useState("home");
   const [settings, setSettingsState] = useState(loadSettings);
   const [saveError, setSaveError] = useState(false);
   const [activity, setActivity] = useState(() => readActivity());
@@ -663,54 +660,39 @@ export default function App() {
         <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} isAdmin={!!profile?.is_admin} />
         {wordsLoading ? (
           <div style={{ color: COLORS.inkMuted, fontSize: 16, padding: "20px 0" }}>Loading your words…</div>
-        ) : tab === "practice" ? (
-          <PracticeView
-            words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]}
+        ) : tab === "home" ? (
+          <HomeDashboard displayName={profile?.display_name} words={[...words, ...classWords]} sentences={sentences} activity={activity} onNavigate={setTab} />
+        ) : tab === "learn" ? (
+          <LearningHub onRecordAttempt={(correct) => trackActivity(correct)} />
+        ) : tab === "progress" ? (
+          <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} activity={activity} />
+        ) : (
+          <PracticeWorkspace
+            words={words}
+            classWords={classWords}
+            sentences={sentences}
             settings={settings}
             setSettings={setSettings}
             onRecordAttempt={handleRecordAttempt}
-          />
-        ) : tab === "class" ? (
-          <ClassDashboard
-            classWords={classWords}
-            onAdd={handleClassAdd}
-            onBulkAdd={handleClassBulkAdd}
-            onEdit={handleClassEdit}
-            onDelete={handleClassDelete}
-          />
-        ) : tab === "learn" ? (
-          <LearningHub onRecordAttempt={(correct) => trackActivity(correct)} />
-        ) : tab === "build" ? (
-          <SentenceBuilder onRecordAttempt={(correct) => trackActivity(correct)} />
-        ) : tab === "sentence-lab" ? (
-          <SentenceLab onRecordAttempt={(correct) => trackActivity(correct)} />
-        ) : tab === "progress" ? (
-          <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} activity={activity} />
-        ) : tab === "exam" ? (
-          <ExamMode
-            words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]}
-            sentences={sentences}
-            onRecordAttempt={handleRecordAttempt}
             onRecordSentenceAttempt={handleSentenceRecordAttempt}
+            trackActivity={trackActivity}
+            onSentenceAdd={handleSentenceAdd}
+            onSentenceBulkAdd={handleSentenceBulkAdd}
+            onSentenceEdit={handleSentenceEdit}
+            onSentenceDelete={handleSentenceDelete}
+            isAdmin={!!profile?.is_admin}
+            onClassAdd={handleClassAdd}
+            onClassBulkAdd={handleClassBulkAdd}
+            onClassEdit={handleClassEdit}
+            onClassDelete={handleClassDelete}
           />
-        ) : tab === "sentences" ? (
-          <SentencesView
-            sentences={sentences}
-            onAdd={handleSentenceAdd}
-            onBulkAdd={handleSentenceBulkAdd}
-            onEdit={handleSentenceEdit}
-            onDelete={handleSentenceDelete}
-            onRecordAttempt={handleSentenceRecordAttempt}
-          />
-        ) : (
-          <WordsView words={words} classWords={classWords} onAdd={handleAdd} onBulkAdd={handleBulkAdd} onEdit={handleEdit} onDelete={handleDelete} />
         )}
       </div>
     </div>
   );
 }
 
-function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
+function Header({ tab, setTab, saveError, displayName, onSignOut }) {
   return (
     <div className="fvt-animate-in" style={{ marginBottom: 24 }}>
       <div className="fvt-header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -744,35 +726,12 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
           <LogOut size={14} /> {displayName || "Sign out"}
         </button>
       </div>
-      <div className="fvt-tabs" aria-label="Main navigation" style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
-        <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
+      <nav className="fvt-tabs fvt-main-nav" aria-label="Main navigation" style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
+        <TabButton label="Home" active={tab === "home"} onClick={() => setTab("home")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BookOpen size={14} /> Learn</span>} active={tab === "learn"} onClick={() => setTab("learn")} />
-        <TabButton label="Build a Sentence" active={tab === "build"} onClick={() => setTab("build")} />
-        <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><Sparkles size={14} /> Sentence Lab</span>} active={tab === "sentence-lab"} onClick={() => setTab("sentence-lab")} />
-        <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BarChart3 size={14} /> Progress</span>} active={tab === "progress"} onClick={() => setTab("progress")} />
-        <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><ClipboardCheck size={14} /> Exam Mode</span>} active={tab === "exam"} onClick={() => setTab("exam")} />
-        <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
-        <TabButton
-          label={
-            <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <BookOpen size={14} /> Sentences
-            </span>
-          }
-          active={tab === "sentences"}
-          onClick={() => setTab("sentences")}
-        />
-        {isAdmin && (
-          <TabButton
-            label={
-              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <Users size={14} /> Class Dashboard
-              </span>
-            }
-            active={tab === "class"}
-            onClick={() => setTab("class")}
-          />
-        )}
-      </div>
+        <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
+        <TabButton label="Progress" active={tab === "progress"} onClick={() => setTab("progress")} />
+      </nav>
       {saveError && (
         <div style={{ marginTop: 10, fontSize: 14, color: COLORS.margin }}>
           Couldn't save your last change — check your connection and try again.

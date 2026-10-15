@@ -58,3 +58,25 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/* Calm four-destination navigation: no long row of feature tabs. */
+.fvt-main-nav {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px !important;
+  padding-bottom: 6px;
+}
+
+.fvt-main-nav > button {
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (max-width: 420px) {
+  .fvt-main-nav > button {
+    padding: 9px 4px !important;
+    font-size: 13px !important;
+  }
+}
