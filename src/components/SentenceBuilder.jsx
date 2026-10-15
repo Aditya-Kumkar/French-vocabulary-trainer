@@ -11,7 +11,7 @@ export default function SentenceBuilder({ onRecordAttempt = () => {} }) {
   const [results, setResults] = useState([]);
   const [finished, setFinished] = useState(false);
   const exercise = SENTENCE_EXERCISES[exerciseIndex];
-  const correct = checked && checkSentenceOrder(selectedWords, exercise);
+  const correct = checked && checkSentenceOrder(selectedWords.map((item) => item.word), exercise);
 
   const resetExercise = (index = exerciseIndex) => {
     setExerciseIndex(index);
