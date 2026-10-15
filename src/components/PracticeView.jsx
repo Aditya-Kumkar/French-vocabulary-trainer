@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Check, X, RotateCcw, ChevronRight, Flame, PenLine, Sparkles } from "lucide-react";
+import { Check, X, RotateCcw, ChevronRight, Flame, PenLine } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, SegmentedControl, Field, EmptyNote } from "../theme";
 import MatchGame from "./MatchGame.jsx";
 import { getDueWords, readReviewSchedule, saveReviewResult } from "../revision.js";
@@ -196,11 +196,9 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
             boxShadow: cardShadow,
           }}
         >
-          <div className="fvt-devanagari" style={{ fontSize: 26, color: COLORS.inkMuted, marginBottom: 6 }}>
-            {currentQ.hindi}
-          </div>
-          <div className="fvt-mono" style={{ fontSize: 13, color: COLORS.inkFaint, marginBottom: 18, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            pronunciation
+          <div className="fvt-pronunciation-note">
+            <span>Pronunciation reference</span>
+            <span className="fvt-devanagari">{currentQ.hindi}</span>
           </div>
 
           <div className="fvt-mono" style={{ marginBottom: 6, fontSize: 13, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em" }}>
@@ -220,8 +218,10 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
             disabled={answered}
             onChange={(e) => setAnswer(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="fvt-answer-line"
-            style={{ fontSize: 26, width: "100%", fontFamily: "'Fraunces', serif" }}
+            className="fvt-answer-input"
+            aria-label={"Write the " + currentQ.answerLabel + " word"}
+            placeholder={currentQ.answerIsFrench ? "Type the French word…" : "Type the English word…"}
+            style={{ fontSize: 22, width: "100%" }}
             autoComplete="off"
             autoCapitalize="off"
             spellCheck="false"
@@ -277,59 +277,21 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
 
 function IntroCard({ item, onContinue }) {
   return (
-    <div
-      className="fvt-animate-in"
-      style={{
-        background: COLORS.page,
-        border: `1px solid ${COLORS.border}`,
-        borderRadius: 10,
-        padding: "24px 24px 24px 28px",
-        boxShadow: cardShadow,
-      }}
-    >
-      <div
-        className="fvt-mono"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          fontSize: 13,
-          color: COLORS.gold,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          marginBottom: 20,
-        }}
-      >
-        <Sparkles size={14} /> First time seeing this one — take a moment to learn it
+    <div className="fvt-animate-in fvt-intro-card">
+      <div className="fvt-intro-reference">
+        <span>Pronunciation reference</span>
+        <span className="fvt-devanagari">{item.hindi}</span>
       </div>
-
-      <div className="fvt-devanagari" style={{ fontSize: 32, color: COLORS.inkMuted, marginBottom: 4 }}>
-        {item.hindi}
-      </div>
-      <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, marginBottom: 22, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-        pronunciation
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 26 }}>
-        <div>
-          <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-            English
-          </div>
-          <div className="fvt-display" style={{ fontSize: 26, fontWeight: 600 }}>
-            {item.english}
-          </div>
-        </div>
-        <div>
-          <div className="fvt-mono" style={{ fontSize: 12, color: COLORS.inkFaint, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-            French
-          </div>
-          <div className="fvt-display" style={{ fontSize: 26, fontWeight: 600, fontStyle: "italic", color: COLORS.margin }}>
-            {item.french}
-          </div>
+      <div className="fvt-intro-word">
+        <div className="fvt-mono fvt-intro-label">French</div>
+        <div className="fvt-display fvt-intro-french">{item.french}</div>
+        <div className="fvt-intro-meaning">
+          <span className="fvt-mono fvt-intro-label">English</span>
+          <span>{item.english}</span>
         </div>
       </div>
-
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <div className="fvt-intro-footer">
+        <p>Take a moment to remember this word.</p>
         <button onClick={onContinue} style={primaryBtnStyle}>
           Got it — quiz me <ChevronRight size={15} />
         </button>
