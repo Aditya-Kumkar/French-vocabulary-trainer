@@ -31,7 +31,7 @@ export default function PracticeWorkspace(props) {
         <h2 className="fvt-display" style={{ fontSize: 28, margin: "0 0 5px" }}>Practice</h2>
         <p style={{ color: "var(--fvt-muted, #656b78)", lineHeight: 1.5, margin: 0 }}>Choose one activity. Short sessions are enough.</p>
       </div>
-      <nav className="fvt-activity-picker" aria-label="Choose a practice activity">
+      </div>}\n      {focusMode && <div className="fvt-focus-bar">\n        <div><span className="fvt-focus-kicker">FOCUS SESSION</span><strong>{SECTIONS.find((item) => item.value === section)?.label}</strong></div>\n        <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>\n      </div>}\n      {!focusMode && <nav className="fvt-activity-picker" aria-label="Choose a practice activity">
         {SECTIONS.map((item) => (
           <button
             key={item.value}
