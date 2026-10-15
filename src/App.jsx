@@ -471,11 +471,9 @@ export default function App() {
   };
 
   const trackActivity = (correct) => {
-    setActivity((previous) => {
-      const next = recordActivityAttempt(previous, correct);
-      saveActivity(next);
-      return next;
-    });
+    const next = recordActivityAttempt(activity, correct);
+    saveActivity(next);
+    setActivity(next);
   };
 
   const handleRecordAttempt = (wordId, source, correct) => {
