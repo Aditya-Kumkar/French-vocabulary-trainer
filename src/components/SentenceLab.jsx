@@ -155,7 +155,14 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
         <p style={{ fontSize: 18, lineHeight: 1.6, margin: "0 0 16px" }}>{exercise.prompt}</p>
 
         {exercise.kind === "mcq" && <div style={{ display: "grid", gap: 8 }}>{exercise.options.map((option) => <button key={option} disabled={checked} onClick={() => setResponse(option)} style={optionButton(response === option, checked && option === exercise.answer)}>{option}</button>)}</div>}
-        {(exercise.kind === "blank" || exercise.kind === "translation") && <input value={response} onChange={(event) => setResponse(event.target.value)} disabled={checked} onKeyDown={(event) => { if (event.key === "Enter" && !checked) check(); }} placeholder={exercise.kind === "blank" ? "Type the missing word…" : "Write the French translation…"} style={{ width: "100%", boxSizing: "border-box", border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: 12, font: "inherit", background: COLORS.page, color: COLORS.ink }} />}
+        {(exercise.kind === "blank" || exercise.kind === "translation") && <div style={{ display: "grid", gap: 9 }}>
+          <input value={response} onChange={(event) => setResponse(event.target.value)} disabled={checked} onKeyDown={(event) => { if (event.key === "Enter" && !checked) check(); }} placeholder={exercise.kind === "blank" ? "Type the missing word…" : "Write the French translation…"} style={{ width: "100%", boxSizing: "border-box", border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: 12, font: "inherit", background: COLORS.page, color: COLORS.ink }} />
+          {!checked && <div aria-label="French accent shortcuts" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, color: COLORS.inkMuted, fontSize: 12, marginRight: 2 }}><Languages size={14} /> Accents</span>
+            {["à", "â", "æ", "ç", "é", "è", "ê", "ë", "î", "ï", "ô", "œ", "ù", "û", "ü", "ÿ", "À", "É", "È", "Ç"].map((accent) => <button key={accent} type="button" aria-label={`Insert ${accent}`} onClick={() => setResponse((current) => current + accent)} style={{ minWidth: 32, minHeight: 34, border: `1px solid ${COLORS.border}`, borderRadius: 6, background: COLORS.page, color: COLORS.ink, fontSize: 16, cursor: "pointer" }}>{accent}</button>)}
+            <span style={{ color: COLORS.inkMuted, fontSize: 12 }}>You can also type without accents.</span>
+          </div>}
+        </div>}
         {exercise.kind === "builder" && <div style={{ display: "grid", gap: 12 }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 7, minHeight: 52, alignContent: "center", padding: 10, borderRadius: 8, background: COLORS.page, border: `1px dashed ${COLORS.border}` }}>
             {builtWords.length === 0 && <span style={{ color: COLORS.inkMuted, fontSize: 13 }}>Tap words below in the correct order.</span>}
