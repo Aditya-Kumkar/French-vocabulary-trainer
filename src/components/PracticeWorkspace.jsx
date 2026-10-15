@@ -16,10 +16,10 @@ const SECTIONS = [
 
 export default function PracticeWorkspace(props) {
   const [section, setSection] = useState("vocabulary");
-  const [focusMode, setFocusMode] = useState(false);
+  const [focusMode, setFocusMode] = useState(true);
   const focusAnchor = useRef(null);
   useEffect(() => {
-    if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [focusMode, section]);
 
   const { words, classWords, sentences, settings, setSettings, onRecordAttempt, onRecordSentenceAttempt, isAdmin } = props;
