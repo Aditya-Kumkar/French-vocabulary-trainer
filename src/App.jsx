@@ -683,14 +683,14 @@ export default function App() {
 function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
   return (
     <div className="fvt-animate-in" style={{ marginBottom: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <div className="fvt-header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <div className="fvt-mono" style={{ fontSize: 12, letterSpacing: "0.16em", color: COLORS.margin, textTransform: "uppercase", marginBottom: 4 }}>
             Cahier de vocabulaire
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
             <Feather size={26} color={COLORS.margin} style={{ transform: "rotate(-25deg)" }} />
-            <h1 className="fvt-display" style={{ fontSize: 32, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
+            <h1 className="fvt-display fvt-brand-title" style={{ fontSize: 32, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
               French Vocabulary Trainer
             </h1>
           </div>
@@ -714,7 +714,7 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
           <LogOut size={14} /> {displayName || "Sign out"}
         </button>
       </div>
-      <div style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
+      <div className="fvt-tabs" aria-label="Main navigation" style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
         <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
         <TabButton
