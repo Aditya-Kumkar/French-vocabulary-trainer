@@ -86,5 +86,5 @@ export default function PracticeWorkspace(props) {
           </div>
         </details>
       )}
-    </div>
+    </div>  );
 }
