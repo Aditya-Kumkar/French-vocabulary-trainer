@@ -52,7 +52,10 @@ export function readDailyGoal(storage) {
 }
 
 export function saveDailyGoal(goal, storage) {
-  const safeGoal = Math.min(100, Math.max(1, Math.round(Number(goal) || DEFAULT_DAILY_GOAL)));
+  const numericGoal = Number(goal);
+  const safeGoal = Number.isFinite(numericGoal)
+    ? Math.min(100, Math.max(1, Math.round(numericGoal)))
+    : DEFAULT_DAILY_GOAL;
   try {
     (storage ?? globalThis.localStorage).setItem(DAILY_GOAL_STORAGE_KEY, String(safeGoal));
   } catch {
