@@ -7,7 +7,7 @@ export default function HomeDashboard({ displayName, words = [], sentences = [],
   const today = activity?.[localDateKey()] || {};
   const attempts = Math.max(0, Number(today.attempts) || 0);
   const percent = Math.min(100, Math.round((attempts / goal) * 100));
-  const firstName = displayName?.trim().split(/\\s+/)[0];
+  const firstName = displayName?.trim().split(/\s+/)[0];
 
   return <div className="fvt-animate-in" style={{ display: "grid", gap: 18 }}>
     <section style={{ background: COLORS.paper, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: "clamp(18px, 4vw, 28px)" }}>
