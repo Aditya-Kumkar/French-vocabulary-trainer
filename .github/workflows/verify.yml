@@ -40,6 +40,9 @@ jobs:
       - name: Test exam mode helpers
         run: node --test tests/exam.test.js
 
+      - name: Test learning progress summaries
+        run: node --test tests/progress.test.js
+
       - name: Verify production build
         run: npm run build
 
