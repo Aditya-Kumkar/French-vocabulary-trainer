@@ -27,3 +27,24 @@ test("login form validates empty fields without calling Supabase", async ({ page
   await page.locator("form").getByRole("button", { name: "Log in" }).click();
   await expect(page.getByText("Enter both an email and a password.")).toBeVisible();
 });
+
+test("create-account tab reveals the display-name field", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expect(page.getByText("Display name (what classmates will see)")).toBeVisible();
+  await expect(page.getByPlaceholder("e.g. Aditya")).toBeVisible();
+  await expect(page.locator("form").getByRole("button", { name: "Create account" })).toBeVisible();
+});
+
+test("login screen fits a desktop viewport too", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  await expect(page.getByRole("heading", { name: "Cahier de vocabulaire" })).toBeVisible();
+  const hasHorizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+  );
+  expect(hasHorizontalOverflow, "page should not overflow horizontally on desktop").toBe(false);
+});
