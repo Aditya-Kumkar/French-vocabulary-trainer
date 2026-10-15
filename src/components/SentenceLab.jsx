@@ -116,7 +116,7 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
   const removeTile = (tileIndex) => {
     if (!checked) setBuiltWords((current) => current.filter((value) => value !== tileIndex));
   };
-  const builtAnswer = builtWords.map((tileIndex) => exercise.words[tileIndex]).join(" ");
+  const builtAnswer = builtWords.map((tileIndex) => exercise?.words?.[tileIndex] ?? "").join(" ");
   const isCorrect = checked && isAnswerCorrect(exercise.kind === "builder" ? builtAnswer : response, exercise);
 
   return (
