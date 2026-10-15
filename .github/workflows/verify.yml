@@ -49,6 +49,9 @@ jobs:
       - name: Test structured French learning topics
         run: node --test tests/learningTopics.test.js
 
+      - name: Test sentence construction exercises
+        run: node --test tests/sentenceExercises.test.js
+
       - name: Verify production build
         run: npm run build
 
