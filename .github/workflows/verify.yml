@@ -8,10 +8,13 @@ on:
       - feature/automated-verification
 
 jobs:
-  build:
-    name: Install dependencies and build
+  build-and-mobile-smoke-test:
+    name: Build and mobile browser smoke test
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: https://example.supabase.co
+      VITE_SUPABASE_ANON_KEY: test-placeholder-key-for-build-only
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -25,5 +28,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Playwright test runner
+        run: npm install --no-save @playwright/test
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Verify production build
         run: npm run build
+
+      - name: Run mobile browser smoke test
+        run: npx playwright test
