@@ -41,9 +41,9 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
     return (
       <div className="fvt-animate-in" style={{ display: "grid", gap: 16 }}>
         <div>
-          <div className="fvt-mono" style={{ color: COLORS.margin, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>Parcours débutant · A1</div>
-          <h2 className="fvt-display" style={{ fontSize: 28, margin: "5px 0" }}>Learn French, step by step</h2>
-          <p style={{ color: COLORS.inkMuted, lineHeight: 1.6, margin: 0 }}>Short lessons, examples, and quick quizzes — not just vocabulary flashcards.</p>
+          <div className="fvt-mono" style={{ color: COLORS.margin, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>START HERE · BEGINNER</div>
+          <h2 className="fvt-display" style={{ fontSize: 28, margin: "5px 0" }}>Start with the basics</h2>
+          <p style={{ color: COLORS.inkMuted, lineHeight: 1.6, margin: 0 }}>No prior French needed. Learn one small idea, see simple examples, then try three questions.</p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 230px), 1fr))", gap: 12 }}>
           {LEARNING_TOPICS.map((item) => (
@@ -67,7 +67,7 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
         <button onClick={() => setTopicId(null)} style={secondaryButton}><ArrowLeft size={15} /> All topics</button>
         <div style={{ textAlign: "center", padding: "24px 0 12px" }}>
           <CheckCircle2 size={42} color={COLORS.correct} />
-          <h2 className="fvt-display" style={{ fontSize: 28, margin: "12px 0 6px" }}>Leçon terminée !</h2>
+          <h2 className="fvt-display" style={{ fontSize: 28, margin: "12px 0 6px" }}>Lesson complete!</h2>
           <p style={{ color: COLORS.inkMuted }}>{topic.title}: you scored <strong>{score}/{topic.questions.length}</strong>.</p>
           <button onClick={() => openTopic(topic.id)} style={primaryButton}><RotateCcw size={15} /> Try again</button>
         </div>
@@ -109,7 +109,7 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
             return <button key={option} disabled={showAnswer} onClick={() => setSelected(option)} style={{ textAlign: "left", padding: "12px 14px", minHeight: 46, borderRadius: 8, border: `1px solid ${isRight ? COLORS.correct : isChosen ? COLORS.margin : COLORS.border}`, background: isRight ? "#E8F3E9" : isChosen ? COLORS.page : "transparent", color: COLORS.ink, cursor: showAnswer ? "default" : "pointer", fontSize: 15, fontWeight: isChosen || isRight ? 650 : 450 }}>{option}</button>;
           })}
         </div>
-        {showAnswer && <div role="status" style={{ marginTop: 14, padding: 12, borderRadius: 8, background: COLORS.page, lineHeight: 1.55 }}><strong>{selected === question.answer ? "Correct ! Bien joué." : `Correct answer: ${question.answer}`}</strong><div style={{ fontSize: 14, marginTop: 4, color: COLORS.inkMuted }}>{question.explain}</div></div>}
+        {showAnswer && <div role="status" style={{ marginTop: 14, padding: 12, borderRadius: 8, background: COLORS.page, lineHeight: 1.55 }}><strong>{selected === question.answer ? "Correct! Well done." : `Correct answer: ${question.answer}`}</strong><div style={{ fontSize: 14, marginTop: 4, color: COLORS.inkMuted }}>{question.explain}</div></div>}
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
           {!showAnswer ? <button disabled={!selected} onClick={checkAnswer} style={{ ...primaryButton, opacity: selected ? 1 : 0.5 }}>Check answer <ChevronRight size={15} /></button> : <button onClick={nextQuestion} style={primaryButton}>{questionIndex + 1 === topic.questions.length ? "See result" : "Next question"} <ChevronRight size={15} /></button>}
         </div>
