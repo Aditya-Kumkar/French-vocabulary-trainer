@@ -38,7 +38,17 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
 
   const resetPractice = (pair) => {
     setSentence(pair);
-    setExercises(generateExercises(pair));
+    const prior = history[pair.id]?.modes || {};
+    const generated = generateExercises(pair);
+    generated.sort((a, b) => {
+      const score = (item) => {
+        const stats = prior[item.kind];
+        if (!stats || (stats.correct + stats.incorrect) === 0) return -1;
+        return stats.correct / (stats.correct + stats.incorrect);
+      };
+      return score(a) - score(b);
+    });
+    setExercises(generated);
     setIndex(0);
     setResponse("");
     setBuiltWords([]);
