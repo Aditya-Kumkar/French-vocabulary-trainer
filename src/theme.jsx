@@ -53,7 +53,7 @@ export const FONTS_CSS = `
   background-color: ${COLORS.page};
   background-image:
     radial-gradient(ellipse at 50% 35%, transparent 55%, rgba(32,38,58,0.05) 100%),
-    repeating-linear-gradient(0deg, transparent, transparent 31px, ${COLORS.ruleFaint} 31px, ${COLORS.ruleFaint} 32px);
+    none;
 }
 
 .fvt-answer-line {
