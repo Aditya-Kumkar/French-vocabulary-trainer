@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Feather, LogOut } from "lucide-react";
+import { Feather, LogOut, BookOpen } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { COLORS, FONTS_CSS, cardShadow, Mascot } from "./theme";
 import Auth from "./components/Auth.jsx";
