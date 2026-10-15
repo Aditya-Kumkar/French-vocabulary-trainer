@@ -18,7 +18,6 @@ export default function PracticeWorkspace(props) {
   const [section, setSection] = useState("vocabulary");
   const [focusMode, setFocusMode] = useState(false);
   const focusAnchor = useRef(null);
-
   useEffect(() => {
     if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [focusMode, section]);
