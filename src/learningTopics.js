@@ -1,7 +1,7 @@
 export const LEARNING_TOPICS = [
   {
     id: "articles", title: "Articles", subtitle: "le, la, l’, les · un, une, des", level: "A1", icon: "📘",
-    lesson: "French nouns have grammatical gender. Use definite articles for “the” and indefinite articles for “a/an/some”. Before a vowel or silent h, le/la become l’. The plural definite article is les.",
+    lesson: "French uses a small word before a noun. Learn these first: **le** (the, masculine), **la** (the, feminine), and **les** (the, plural). Use **l’** before a vowel sound.",
     examples: [["le livre", "the book (masculine)"], ["la table", "the table (feminine)"], ["l’école", "the school"], ["les amis", "the friends"], ["un stylo / une pomme", "a pen / an apple"], ["des livres", "some books"]],
     questions: [
       { prompt: "___ maison (the house)", options: ["le", "la", "les"], answer: "la", explain: "Maison is feminine: la maison." },
@@ -11,7 +11,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "possessives", title: "Possessive adjectives", subtitle: "mon, ma, mes · ton, ta, tes", level: "A1", icon: "🧑‍🤝‍🧑",
-    lesson: "Possessive adjectives agree with the thing owned, not the owner. Mon/ma/mes mean my; ton/ta/tes mean your (informal); son/sa/ses mean his or her. Use mon, ton or son before a feminine singular noun beginning with a vowel or silent h.",
+    lesson: "These words mean **my** or **your**. Use **mon/ma** for one thing and **mes** for more than one. The word changes to match the thing, not the person.",
     examples: [["mon frère / ma sœur / mes amis", "my brother / my sister / my friends"], ["ton livre / ta maison / tes clés", "your book / your house / your keys"], ["son père / sa mère / ses parents", "his/her father / mother / parents"], ["mon amie", "my female friend (vowel sound)"]],
     questions: [
       { prompt: "___ sœur (my sister)", options: ["mon", "ma", "mes"], answer: "ma", explain: "Sœur is feminine singular, so use ma." },
@@ -21,7 +21,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "demonstratives", title: "Demonstrative adjectives", subtitle: "ce, cet, cette, ces", level: "A1", icon: "👉",
-    lesson: "Demonstrative adjectives mean “this/that” or “these/those”. Use ce with masculine singular nouns, cet before a masculine singular noun starting with a vowel or silent h, cette with feminine singular nouns, and ces with plural nouns.",
+    lesson: "These words mean **this** or **these**. Start with three patterns: **ce** (masculine), **cette** (feminine), and **ces** (plural). Use **cet** before a masculine word that starts with a vowel sound.",
     examples: [["ce garçon", "this/that boy"], ["cet homme", "this/that man"], ["cette fille", "this/that girl"], ["ces livres", "these/those books"]],
     questions: [
       { prompt: "___ arbre (this tree)", options: ["ce", "cet", "cette"], answer: "cet", explain: "Arbre is masculine and starts with a vowel: cet arbre." },
@@ -31,7 +31,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "numbers", title: "Numbers", subtitle: "0–100 · counting and age", level: "A1", icon: "🔢",
-    lesson: "Learn numbers in groups. Notice the special forms onze, douze, treize, quinze and seize. French uses quatre-vingts for 80 and soixante-dix for 70 in standard metropolitan French. To say your age, use avoir: J’ai vingt ans.",
+    lesson: "Start with a few numbers at a time. You do not need to memorise them all today. One useful phrase is **J’ai vingt ans** — “I am twenty years old.”",
     examples: [["zéro, un, deux, trois", "0, 1, 2, 3"], ["onze, douze, treize, quatorze, quinze, seize", "11–16"], ["vingt, trente, quarante, cinquante", "20, 30, 40, 50"], ["soixante, soixante-dix, quatre-vingts, quatre-vingt-dix", "60, 70, 80, 90"], ["J’ai vingt ans.", "I am twenty years old."]],
     questions: [
       { prompt: "How do you say 15?", options: ["quatorze", "quinze", "seize"], answer: "quinze", explain: "Quinze means fifteen." },
@@ -41,7 +41,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "colours", title: "Colours", subtitle: "les couleurs · masculine and feminine", level: "A1", icon: "🎨",
-    lesson: "Most colour adjectives agree in gender and number with the noun. For example, petit changes to petite, and vert changes to verte. Some colours such as orange and marron usually stay unchanged. Place most colour adjectives after the noun.",
+    lesson: "Learn the colour first, then use it in a short phrase. Many colours change a little depending on the noun. For now, remember **une voiture rouge** means “a red car”.",
     examples: [["rouge", "red"], ["bleu / bleue", "blue (masculine / feminine)"], ["vert / verte", "green"], ["noir / noire", "black"], ["blanc / blanche", "white"], ["une voiture rouge", "a red car"]],
     questions: [
       { prompt: "A blue feminine noun: une voiture ___", options: ["bleu", "bleue", "bleus"], answer: "bleue", explain: "Bleu agrees with feminine voiture: bleue." },
@@ -51,7 +51,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "body", title: "Body parts", subtitle: "la tête · les mains · le corps", level: "A1", icon: "🧍",
-    lesson: "Learn each body part with its article, because the article helps you remember the noun’s gender. In French, body parts are often used with the definite article when describing your own body: J’ai mal à la tête (I have a headache).",
+    lesson: "Learn each body part together with its little word: **la tête** (head), **le nez** (nose), **la bouche** (mouth). A useful phrase is **J’ai mal à la tête** — “I have a headache.”",
     examples: [["la tête", "head"], ["les yeux", "eyes (singular: l’œil)"], ["le nez", "nose"], ["la bouche", "mouth"], ["les mains", "hands (singular: la main)"], ["les jambes / les pieds", "legs / feet"], ["J’ai mal au dos.", "My back hurts."]],
     questions: [
       { prompt: "___ tête (the head)", options: ["le", "la", "les"], answer: "la", explain: "Tête is feminine: la tête." },
@@ -61,7 +61,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "weekdays", title: "Days of the week", subtitle: "lundi → dimanche", level: "A1", icon: "📅",
-    lesson: "Days are masculine in French and normally lowercase. Use the article le to mean every/on Mondays (le lundi). Without le, a day often refers to a particular day. The French week starts on Monday.",
+    lesson: "Learn the days in order. French days usually start with a lowercase letter. **Lundi** means Monday; **dimanche** means Sunday.",
     examples: [["lundi, mardi, mercredi", "Monday, Tuesday, Wednesday"], ["jeudi, vendredi", "Thursday, Friday"], ["samedi, dimanche", "Saturday, Sunday"], ["Nous avons cours le lundi.", "We have class on Mondays."]],
     questions: [
       { prompt: "Which means Wednesday?", options: ["mardi", "mercredi", "jeudi"], answer: "mercredi", explain: "Mercredi means Wednesday." },
@@ -71,7 +71,7 @@ export const LEARNING_TOPICS = [
   },
   {
     id: "months", title: "Months", subtitle: "janvier → décembre", level: "A1", icon: "🗓️",
-    lesson: "Months are masculine and normally lowercase in French. Use en with a month to say in a particular month. To give a date, French commonly uses day + month: le 14 juillet.",
+    lesson: "Months usually start with a lowercase letter in French. To say “in May”, say **en mai**. You can learn the months a few at a time.",
     examples: [["janvier, février, mars", "January, February, March"], ["avril, mai, juin", "April, May, June"], ["juillet, août, septembre", "July, August, September"], ["octobre, novembre, décembre", "October, November, December"], ["Je suis né en mai.", "I was born in May."]],
     questions: [
       { prompt: "How do you say August?", options: ["avril", "août", "octobre"], answer: "août", explain: "Août means August." },
