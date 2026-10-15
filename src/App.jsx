@@ -622,7 +622,7 @@ export default function App() {
       <div className="fvt-seyes" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.inkMuted }}>
         <style>{FONTS_CSS}</style>
         <CornerMascot />
-        Opening your cahier…
+        Preparing your learning space…
       </div>
     );
   }
@@ -713,13 +713,13 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
       <div className="fvt-header-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <div className="fvt-mono" style={{ fontSize: 12, letterSpacing: "0.16em", color: COLORS.margin, textTransform: "uppercase", marginBottom: 4 }}>
-            Cahier de vocabulaire
+            APPRENDRE · PRATIQUER · PROGRESSER
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
             <Feather size={26} color={COLORS.margin} style={{ transform: "rotate(-25deg)" }} />
-            <h1 className="fvt-display fvt-brand-title" style={{ fontSize: 32, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
-              French Vocabulary Trainer
-            </h1>
+            <div style={{ minWidth: 0 }}><h1 className="fvt-display fvt-brand-title" style={{ fontSize: 34, lineHeight: 1.12, fontStyle: "italic", fontWeight: 600, margin: 0 }}>
+              Parlons Français
+            </h1><p className="fvt-brand-tagline" style={{ margin: "6px 0 0", fontSize: 15, lineHeight: 1.4, color: COLORS.inkMuted }}>Your French learning space</p></div>
           </div>
         </div>
         <button
