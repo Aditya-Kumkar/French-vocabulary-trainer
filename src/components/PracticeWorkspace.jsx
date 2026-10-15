@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { SegmentedControl } from "../theme";
 import PracticeView from "./PracticeView.jsx";
 import SentencesView from "./SentencesView.jsx";
 import SentenceBuilder from "./SentenceBuilder.jsx";
@@ -26,7 +25,19 @@ export default function PracticeWorkspace(props) {
         <h2 className="fvt-display" style={{ fontSize: 28, margin: "0 0 5px" }}>Practice</h2>
         <p style={{ color: "var(--fvt-muted, #656b78)", lineHeight: 1.5, margin: 0 }}>Choose one activity. Short sessions are enough.</p>
       </div>
-      <SegmentedControl options={SECTIONS} value={section} onChange={setSection} />
+      <nav className="fvt-activity-picker" aria-label="Choose a practice activity">
+        {SECTIONS.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            className={section === item.value ? "is-active" : ""}
+            aria-pressed={section === item.value}
+            onClick={() => setSection(item.value)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </nav>
       {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
       {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
       {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}

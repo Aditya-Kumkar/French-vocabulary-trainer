@@ -143,3 +143,96 @@
     min-width: 0;
   }
 }
+
+
+/* Practice workspace: compact, predictable controls on narrow screens. */
+.fvt-activity-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin: 6px 0 22px;
+}
+
+.fvt-activity-picker > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 52px;
+  padding: 12px 10px;
+  border: 1px solid var(--fvt-border, #dcd9ca);
+  border-radius: 12px;
+  background: #fffdf8;
+  color: #5b6275;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.fvt-activity-picker > button.is-active {
+  background: #20263a;
+  border-color: #20263a;
+  color: #fff;
+}
+
+.fvt-activity-picker > button:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+.fvt-root input[type="checkbox"],
+.fvt-root input[type="radio"] {
+  width: 20px !important;
+  min-width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  margin: 3px 0 0;
+  padding: 0;
+}
+
+.fvt-root .fvt-setting-option {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.fvt-root .fvt-setting-option input[type="checkbox"] {
+  width: 20px !important;
+  min-width: 20px;
+  flex: 0 0 20px;
+}
+
+.fvt-review-settings,
+.fvt-review-settings * {
+  min-width: 0;
+}
+
+@media (max-width: 420px) {
+  .fvt-activity-picker {
+    gap: 7px;
+  }
+
+  .fvt-activity-picker > button {
+    min-height: 50px;
+    padding: 10px 7px;
+    font-size: 15px;
+  }
+
+  .fvt-review-settings {
+    padding: 16px !important;
+  }
+
+  .fvt-review-settings .fvt-field,
+  .fvt-review-settings select {
+    width: 100%;
+    max-width: 100%;
+  }
+}
