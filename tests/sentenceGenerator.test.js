@@ -51,3 +51,17 @@ test("short adaptive sessions are capped and prioritize weaker sentences", () =>
 test("generator rejects missing bilingual text", () => {
   assert.throws(() => generateExercises({ english: "Hello", french: "" }), /both English and French/);
 });
+
+test("typed French answers accept omitted accents while showing the canonical spelling", () => {
+  const exercises = generateExercises(VERIFIED_SENTENCES.find((item) => item.id === "go-school"), { random: fixedRandom });
+  const blank = exercises.find((item) => item.kind === "blank");
+  const translation = exercises.find((item) => item.kind === "translation");
+  assert.equal(isAnswerCorrect("ecole", { ...blank, answer: "école", acceptedAnswers: ["école"] }), true);
+  assert.equal(isAnswerCorrect("Je vais a l'ecole", translation), true);
+  assert.equal(isAnswerCorrect("Je vais à l'école.", translation), true);
+});
+
+test("answer normalization handles common French ligatures", () => {
+  const translation = { kind: "translation", answer: "C'est ma sœur.", acceptedAnswers: ["C'est ma sœur."] };
+  assert.equal(isAnswerCorrect("C'est ma soeur", translation), true);
+});
