@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Check, X, RotateCcw, ChevronRight, Flame, PenLine, Sparkles } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, SegmentedControl, Field, EmptyNote } from "../theme";
 import MatchGame from "./MatchGame.jsx";
+import { getDueWords, readReviewSchedule, saveReviewResult } from "../revision.js";
 
 function stripDiacritics(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -65,7 +66,10 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
   const inputRef = useRef(null);
 
   const startSession = () => {
-    const queue = buildQueue(words, settings);
+    const dueWords = settings.spacedRepetition ? getDueWords(words, readReviewSchedule()) : words;
+    // If nothing is due yet, keep practice available as a light review rather than showing an empty session.
+    const reviewPool = dueWords.length > 0 ? dueWords : words;
+    const queue = buildQueue(reviewPool, settings);
     setSession({ queue, index: 0, score: 0, mistakes: [] });
     setAnswer("");
     setAnswered(false);
@@ -85,6 +89,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
       score: s.score + (correct ? 1 : 0),
       mistakes: correct ? s.mistakes : [...s.mistakes, { ...currentQ, userAnswer: answer }],
     }));
+    saveReviewResult({ id: currentQ.wordId, source: currentQ.source }, correct);
     onRecordAttempt(currentQ.wordId, currentQ.source, correct);
   };
 
@@ -365,6 +370,18 @@ function SettingsPanel({ settings, setSettings, onStart, wordCount }) {
           <input type="checkbox" checked={settings.weakOnly} onChange={(e) => setSettings({ ...settings, weakOnly: e.target.checked })} />
           Focus on new &amp; struggling words only
         </label>
+
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, cursor: "pointer" }}>
+          <input
+            type="checkbox"
+            checked={settings.spacedRepetition !== false}
+            onChange={(e) => setSettings({ ...settings, spacedRepetition: e.target.checked })}
+          />
+          Prioritise words that are due for review (spaced repetition)
+        </label>
+        <p style={{ fontSize: 13, color: COLORS.inkFaint, margin: "-6px 0 0 24px" }}>
+          New words are included. Correct answers return later; missed words come back in about 10 minutes. Reviews are saved on this device.
+        </p>
       </div>
 
       <button onClick={onStart} style={{ ...primaryBtnStyle, marginTop: 20, padding: "12px 22px", fontSize: 17 }}>
