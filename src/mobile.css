@@ -1,0 +1,60 @@
+/* Mobile-first layout improvements. Keep desktop styling unchanged. */
+.fvt-root,
+.fvt-seyes {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .fvt-root {
+    overflow-x: clip;
+  }
+
+  .fvt-root .fvt-header-top {
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .fvt-root .fvt-brand-title {
+    font-size: clamp(1.55rem, 7vw, 2rem) !important;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .fvt-root .fvt-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .fvt-root .fvt-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fvt-root .fvt-tabs > button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 10px 12px !important;
+    white-space: nowrap;
+  }
+
+  .fvt-root button {
+    touch-action: manipulation;
+  }
+
+  .fvt-root input,
+  .fvt-root textarea,
+  .fvt-root select {
+    max-width: 100%;
+    font-size: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fvt-root *,
+  .fvt-root *::before,
+  .fvt-root *::after {
+    scroll-behavior: auto !important;
+  }
+}
