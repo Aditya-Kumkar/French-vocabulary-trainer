@@ -44,13 +44,19 @@ export default function PracticeWorkspace(props) {
                 type="button"
                 className={section === item.value ? "is-active" : ""}
                 aria-pressed={section === item.value}
-                onClick={() => { setSection(item.value); setFocusMode(true); }}
+                onClick={() => { setSection(item.value); setFocusMode(item.value !== "vocabulary"); }}
               >
                 {item.label}
               </button>
             ))}
           </nav>
         </>
+      )}
+
+      {!focusMode && section === "vocabulary" && (
+        <div className="fvt-focus-content">
+          <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} onSessionStart={() => setFocusMode(true)} />
+        </div>
       )}
 
       {focusMode && (
@@ -63,7 +69,7 @@ export default function PracticeWorkspace(props) {
             <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>
           </div>
           <div className="fvt-focus-content">
-            {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
+            {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} onSessionStart={() => setFocusMode(true)} />}
             {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
             {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
             {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
