@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Feather, LogOut, Users, BookOpen, ClipboardCheck } from "lucide-react";
+import { Feather, LogOut, Users, BookOpen, ClipboardCheck, BarChart3 } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { COLORS, FONTS_CSS, cardShadow, Mascot } from "./theme";
 import Auth from "./components/Auth.jsx";
@@ -8,6 +8,7 @@ import PracticeView from "./components/PracticeView.jsx";
 import ClassDashboard from "./components/ClassDashboard.jsx";
 import SentencesView from "./components/SentencesView.jsx";
 import ExamMode from "./components/ExamMode.jsx";
+import ProgressDashboard from "./components/ProgressDashboard.jsx";
 
 const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false, spacedRepetition: true };
 const SETTINGS_KEY = "fvt-settings";
@@ -664,6 +665,8 @@ export default function App() {
             onEdit={handleClassEdit}
             onDelete={handleClassDelete}
           />
+        ) : tab === "progress" ? (
+          <ProgressDashboard words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]} sentences={sentences} />
         ) : tab === "exam" ? (
           <ExamMode
             words={[...words.map((w) => ({ ...w, source: "personal" })), ...classWords]}
@@ -724,6 +727,7 @@ function Header({ tab, setTab, saveError, displayName, onSignOut, isAdmin }) {
       </div>
       <div className="fvt-tabs" aria-label="Main navigation" style={{ display: "flex", gap: 6, borderBottom: `1px solid ${COLORS.border}` }}>
         <TabButton label="Practice" active={tab === "practice"} onClick={() => setTab("practice")} />
+        <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><BarChart3 size={14} /> Progress</span>} active={tab === "progress"} onClick={() => setTab("progress")} />
         <TabButton label={<span style={{ display: "flex", alignItems: "center", gap: 5 }}><ClipboardCheck size={14} /> Exam Mode</span>} active={tab === "exam"} onClick={() => setTab("exam")} />
         <TabButton label="My Words" active={tab === "words"} onClick={() => setTab("words")} />
         <TabButton
