@@ -54,20 +54,33 @@ export default function PracticeWorkspace(props) {
       )}
 
       {focusMode && (
-        <div className="fvt-focus-bar">
-          <div>
-            <span className="fvt-focus-kicker">FOCUS SESSION</span>
-            <strong>{SECTIONS.find((item) => item.value === section)?.label}</strong>
+        <section className="fvt-focus-overlay" role="dialog" aria-modal="true" aria-label="Practice focus session">
+          <div className="fvt-focus-bar">
+            <div>
+              <span className="fvt-focus-kicker">FOCUS SESSION</span>
+              <strong>{SECTIONS.find((item) => item.value === section)?.label}</strong>
+            </div>
+            <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>
           </div>
-          <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>
-        </div>
+          <div className="fvt-focus-content">
+            {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
+            {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
+            {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
+            {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
+            {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
+          </div>
+        </section>
       )}
 
-      {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
-      {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
-      {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
-      {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
-      {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
+      {!focusMode && (
+        <>
+          {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
+          {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
+          {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
+          {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
+          {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
+        </>
+      )}
 
       {!focusMode && isAdmin && (
         <details style={{ borderTop: "1px solid #e4e0d5", paddingTop: 12 }}>
