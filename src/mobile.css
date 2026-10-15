@@ -236,3 +236,67 @@
     max-width: 100%;
   }
 }
+
+
+/* Focus mode removes navigation noise once a learner chooses an activity. */
+.fvt-practice-workspace.is-focused {
+  gap: 12px !important;
+  scroll-margin-top: 10px;
+}
+
+.fvt-focus-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0 12px;
+  background: var(--fvt-page, #f8f7f2);
+  border-bottom: 1px solid var(--fvt-border, #dedbce);
+}
+
+.fvt-focus-bar > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.fvt-focus-kicker {
+  color: var(--fvt-muted, #656b78);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.fvt-focus-bar strong {
+  color: var(--fvt-ink, #20263a);
+  font-size: 17px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.fvt-focus-bar > button {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid var(--fvt-border, #dedbce);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--fvt-ink, #20263a);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .fvt-practice-workspace.is-focused {
+    gap: 10px !important;
+  }
+
+  .fvt-focus-bar {
+    margin: 0;
+    padding: 8px 0 10px;
+  }
+}
