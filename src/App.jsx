@@ -8,7 +8,7 @@ import PracticeView from "./components/PracticeView.jsx";
 import ClassDashboard from "./components/ClassDashboard.jsx";
 import SentencesView from "./components/SentencesView.jsx";
 
-const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false };
+const DEFAULT_SETTINGS = { direction: "mixed", ignoreAccents: true, weakOnly: false, spacedRepetition: true };
 const SETTINGS_KEY = "fvt-settings";
 
 const DECOR_POSITIONS = [
