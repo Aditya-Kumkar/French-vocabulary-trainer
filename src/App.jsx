@@ -655,8 +655,7 @@ export default function App() {
       />
       <SideDecor words={words} />
       <CultureDoodles />
-      <CornerMascot />
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "28px 16px 64px", position: "relative", zIndex: 1 }}>
+      <div style={{ maxWidth: 720, width: "100%", minWidth: 0, margin: "0 auto", padding: "28px 16px 64px", position: "relative", zIndex: 1 }}>
         <Header tab={tab} setTab={setTab} saveError={saveError} displayName={profile?.display_name} onSignOut={handleSignOut} isAdmin={!!profile?.is_admin} />
         {wordsLoading ? (
           <div style={{ color: COLORS.inkMuted, fontSize: 16, padding: "20px 0" }}>Loading your words…</div>

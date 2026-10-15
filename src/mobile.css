@@ -80,3 +80,66 @@
     font-size: 13px !important;
   }
 }
+
+
+/* Mobile readability and overflow fixes after real-device review. */
+.fvt-root,
+.fvt-root > div,
+.fvt-root main,
+.fvt-root section {
+  min-width: 0;
+}
+
+.fvt-root {
+  overflow-x: hidden;
+}
+
+.fvt-root .fvt-main-nav > button {
+  font-size: 16px !important;
+  line-height: 1.25;
+  padding: 12px 8px !important;
+  min-height: 48px;
+}
+
+.fvt-root button,
+.fvt-root label,
+.fvt-root p,
+.fvt-root small,
+.fvt-root select,
+.fvt-root input {
+  overflow-wrap: anywhere;
+}
+
+.fvt-root p,
+.fvt-root label,
+.fvt-root select,
+.fvt-root input,
+.fvt-root textarea {
+  font-size: 16px;
+}
+
+.fvt-root .fvt-main-nav {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .fvt-root .fvt-main-nav > button {
+    font-size: 15px !important;
+    padding: 12px 4px !important;
+  }
+
+  .fvt-root .fvt-display {
+    overflow-wrap: anywhere;
+  }
+
+  .fvt-root section {
+    max-width: 100%;
+  }
+
+  .fvt-root input,
+  .fvt-root select,
+  .fvt-root textarea {
+    width: 100%;
+    min-width: 0;
+  }
+}
