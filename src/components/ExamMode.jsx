@@ -91,19 +91,19 @@ export default function ExamMode({ words, sentences, onRecordAttempt, onRecordSe
         <div style={{ fontWeight: 600, marginBottom: 10 }}>Choose exam length</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: 16 }}>
           {QUESTION_COUNTS.map((count) => {
-            const disabled = availableCount < count;
+            const disabled = false;
             const active = questionCount === count;
             return (
               <button key={count} type="button" disabled={disabled} onClick={() => setQuestionCount(count)}
                 style={{ padding: "12px 8px", borderRadius: 8, border: `1px solid ${active ? COLORS.margin : COLORS.border}`, background: active ? COLORS.page : "transparent", color: disabled ? COLORS.inkFaint : COLORS.ink, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.55 : 1 }}>
                 <div style={{ fontSize: 20 }}>{count}</div>
-                <div style={{ fontSize: 12, fontWeight: 400 }}>questions</div>
+                <div style={{ fontSize: 12, fontWeight: 400 }}>up to questions</div>
               </button>
             );
           })}
         </div>
         <div style={{ color: COLORS.inkMuted, fontSize: 13, marginBottom: 18 }}>
-          {availableCount} eligible questions available · 1 minute per question
+          {availableCount} eligible questions available · exam uses up to the selected count · 1 minute per question
         </div>
         <button type="button" onClick={startExam} style={{ ...primaryBtnStyle, width: "100%", justifyContent: "center" }}>
           Start mock exam
