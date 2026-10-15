@@ -38,6 +38,18 @@ test("create-account tab reveals the display-name field", async ({ page }) => {
   await expect(page.locator("form").getByRole("button", { name: "Create account" })).toBeVisible();
 });
 
+test("account creation validates missing display name without calling Supabase", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  await page.getByRole("button", { name: "Create account" }).click();
+  await page.getByPlaceholder("you@example.com").fill("student@example.com");
+  await page.getByPlaceholder("At least 6 characters").fill("example-password");
+  await page.locator("form").getByRole("button", { name: "Create account" }).click();
+
+  await expect(page.getByText("Enter a name your classmates will recognize.")).toBeVisible();
+});
+
 test("login screen fits a desktop viewport too", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/", { waitUntil: "networkidle" });
