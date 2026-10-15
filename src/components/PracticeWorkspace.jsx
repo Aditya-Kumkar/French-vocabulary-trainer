@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import PracticeView from "./PracticeView.jsx";
 import SentencesView from "./SentencesView.jsx";
 import SentenceBuilder from "./SentenceBuilder.jsx";
@@ -16,6 +16,12 @@ const SECTIONS = [
 
 export default function PracticeWorkspace(props) {
   const [section, setSection] = useState("vocabulary");
+  const [focusMode, setFocusMode] = useState(false);
+  const focusAnchor = useRef(null);
+
+  useEffect(() => {
+    if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focusMode, section]);
   const { words, classWords, sentences, settings, setSettings, onRecordAttempt, onRecordSentenceAttempt, isAdmin } = props;
   const allWords = [...words.map((word) => ({ ...word, source: "personal" })), ...classWords];
 
@@ -32,7 +38,7 @@ export default function PracticeWorkspace(props) {
             type="button"
             className={section === item.value ? "is-active" : ""}
             aria-pressed={section === item.value}
-            onClick={() => setSection(item.value)}
+            onClick={() => { setSection(item.value); setFocusMode(true); }}
           >
             {item.label}
           </button>
