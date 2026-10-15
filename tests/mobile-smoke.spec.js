@@ -23,6 +23,7 @@ test("login form validates empty fields without calling Supabase", async ({ page
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "networkidle" });
 
-  await page.getByRole("button", { name: "Log in" }).click();
+  // The auth tabs and the submit button both say "Log in"; scope to the form.
+  await page.locator("form").getByRole("button", { name: "Log in" }).click();
   await expect(page.getByText("Enter both an email and a password.")).toBeVisible();
 });
