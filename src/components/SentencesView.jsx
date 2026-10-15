@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import SentenceLab from "./SentenceLab.jsx";
 import { Plus, Trash2, Pencil, Check, ListPlus, ChevronRight, X, RotateCcw, Flame, Sparkles, PenLine } from "lucide-react";
 import { COLORS, inputStyle, primaryBtnStyle, secondaryBtnStyle, iconBtnStyle, cardShadow, Mascot, SegmentedControl, Field, EmptyNote } from "../theme";
 
@@ -26,21 +27,24 @@ function splitSentence(sentence) {
 
 const ACCENT_KEYS = ["é", "è", "ê", "ë", "à", "â", "ù", "û", "ü", "î", "ï", "ô", "ç", "œ"];
 
-export default function SentencesView({ sentences, onAdd, onBulkAdd, onEdit, onDelete, onRecordAttempt }) {
+export default function SentencesView({ sentences, onAdd, onBulkAdd, onEdit, onDelete, onRecordAttempt, onRecordLabAttempt = () => {} }) {
   const [subTab, setSubTab] = useState("practice");
 
   return (
     <div className="fvt-animate-in">
       <SegmentedControl
         options={[
-          { value: "practice", label: "Quiz" },
-          { value: "manage", label: "Manage" },
+          { value: "practice", label: "Sentence quiz" },
+          { value: "lab", label: "English to French lab" },
+          { value: "manage", label: "Manage sentences" },
         ]}
         value={subTab}
         onChange={setSubTab}
       />
       {subTab === "practice" ? (
         <SentencePractice sentences={sentences} onRecordAttempt={onRecordAttempt} />
+      ) : subTab === "lab" ? (
+        <SentenceLab onRecordAttempt={onRecordLabAttempt} />
       ) : (
         <SentenceManager sentences={sentences} onAdd={onAdd} onBulkAdd={onBulkAdd} onEdit={onEdit} onDelete={onDelete} />
       )}
