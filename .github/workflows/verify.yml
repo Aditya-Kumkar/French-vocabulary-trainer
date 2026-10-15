@@ -43,6 +43,9 @@ jobs:
       - name: Test learning progress summaries
         run: node --test tests/progress.test.js
 
+      - name: Test daily learning activity and goals
+        run: node --test tests/activity.test.js
+
       - name: Verify production build
         run: npm run build
 
