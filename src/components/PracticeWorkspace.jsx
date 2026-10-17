@@ -14,9 +14,20 @@ const SECTIONS = [
 ];
 
 export default function PracticeWorkspace(props) {
-  const [section, setSection] = useState("vocabulary");
+  const [section, setSection] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("fvt-practice-section");
+      return SECTIONS.some((item) => item.value === saved) ? saved : "vocabulary";
+    } catch {
+      return "vocabulary";
+    }
+  });
   const [focusMode, setFocusMode] = useState(false);
   const focusAnchor = useRef(null);
+
+  useEffect(() => {
+    try { sessionStorage.setItem("fvt-practice-section", section); } catch { /* Storage may be unavailable. */ }
+  }, [section]);
 
   useEffect(() => {
     if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
