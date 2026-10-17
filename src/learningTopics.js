@@ -2,7 +2,7 @@ export const LEARNING_TOPICS = [
   {
     id: "articles", title: "Articles", subtitle: "le, la, l’, les · un, une, des", level: "A1", icon: "📘",
     lesson: "French uses a small word before a noun. Learn these first: **le** (the, masculine), **la** (the, feminine), and **les** (the, plural). Use **l’** before a vowel sound.",
-    examples: [["le livre", "the book (masculine)"], ["la table", "the table (feminine)"], ["l’école", "the school"], ["les amis", "the friends"], ["un stylo / une pomme", "a pen / an apple"], ["des livres", "some books"]],
+    examples: [["le livre", "the book (masculine)"], ["la table", "the table (feminine)"], ["l’école", "the school"], ["les amis", "the friends"], ["un stylo / une pomme", "a pen / an apple"], ["des livres", "some books"], ["un stylo", "a pen"], ["un cahier", "a notebook"], ["un cartable", "a schoolbag"], ["une table", "a table"]],
     questions: [
       { prompt: "___ livre (the book)", options: ["le", "la", "les"], answer: "le", explain: "Livre is masculine singular: le livre." },
       { prompt: "___ table (the table)", options: ["le", "la", "les"], answer: "la", explain: "Table is feminine singular: la table." },
@@ -19,6 +19,10 @@ export const LEARNING_TOPICS = [
       { prompt: "___ amie (a female friend)", options: ["un", "une", "des"], answer: "une", explain: "Amie is feminine singular. The definite form would be l’amie." },
       { prompt: "___ hôtel (the hotel)", options: ["le", "l’", "les"], answer: "l’", explain: "In standard usage, hôtel takes l’hôtel because the h is silent." },
       { prompt: "___ crayons (some pencils)", options: ["un", "une", "des"], answer: "des", explain: "Use des with an indefinite plural noun." },
+      { prompt: "___ stylo (a pen)", options: ["un", "une", "des"], answer: "un", explain: "Stylo is masculine singular: un stylo." },
+      { prompt: "___ cahier (a notebook)", options: ["un", "une", "des"], answer: "un", explain: "Cahier is masculine singular, so use un." },
+      { prompt: "___ cartable (a schoolbag)", options: ["un", "une", "des"], answer: "un", explain: "Cartable is masculine singular: un cartable." },
+      { prompt: "___ table (a table)", options: ["un", "une", "des"], answer: "une", explain: "Table is feminine singular, so use une." },
     ],
   },
   {
