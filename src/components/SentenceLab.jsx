@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, CheckCircle2, Languages, RotateCcw, XCircle } from "lucide-react";
 import { COLORS, cardShadow } from "../theme";
 import { VERIFIED_SENTENCES, findVerifiedSentence } from "../sentenceBank.js";
 import { generateExercises, isAnswerCorrect } from "../sentenceGenerator.js";
+import { supabase } from "../supabaseClient.js";
 
 const HISTORY_KEY = "fvt-sentence-lab-history";
 const MODES = [
@@ -27,7 +28,53 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
   const [error, setError] = useState("");
   const [history, setHistory] = useState(readHistory);
   const [completed, setCompleted] = useState(false);
+  const [communitySentences, setCommunitySentences] = useState([]);
+  const [communityEnglish, setCommunityEnglish] = useState("");
+  const [communityFrench, setCommunityFrench] = useState("");
+  const [communityStatus, setCommunityStatus] = useState("");
+  const [communityLoading, setCommunityLoading] = useState(false);
   const exercise = exercises[index];
+
+  useEffect(() => {
+    let active = true;
+    supabase.from("community_sentences").select("id, english, french, created_at").order("created_at", { ascending: false }).limit(200)
+      .then(({ data, error: loadError }) => {
+        if (!active) return;
+        if (loadError) {
+          setCommunityStatus("Shared contributions are not available yet. The database migration may need to be applied.");
+          return;
+        }
+        setCommunitySentences((data || []).map((item) => ({
+          id: "community-" + item.id, level: "A1", english: item.english, french: item.french,
+          focus: "community", explanation: "Shared by the French learning community."
+        })));
+      });
+    return () => { active = false; };
+  }, []);
+
+  const submitCommunitySentence = async (event) => {
+    event.preventDefault();
+    setCommunityStatus("");
+    const en = communityEnglish.trim();
+    const fr = communityFrench.trim();
+    if (!en || !fr) { setCommunityStatus("Add both the English sentence and its French translation."); return; }
+    if (en.length > 240 || fr.length > 240) { setCommunityStatus("Keep each sentence under 240 characters."); return; }
+    setCommunityLoading(true);
+    try {
+      const { data, error: saveError } = await supabase.from("community_sentences")
+        .insert({ english: en, french: fr }).select("id, english, french, created_at").single();
+      if (saveError) throw saveError;
+      const pair = { id: "community-" + data.id, level: "A1", english: data.english, french: data.french, focus: "community", explanation: "Shared by the French learning community." };
+      setCommunitySentences((current) => [pair, ...current.filter((item) => item.id !== pair.id)]);
+      setCommunityEnglish("");
+      setCommunityFrench("");
+      setCommunityStatus("Added to the shared bank — everyone using the app can now see it.");
+    } catch (err) {
+      setCommunityStatus(err.message || "Could not share this sentence. Please try again.");
+    } finally {
+      setCommunityLoading(false);
+    }
+  };
 
   const orderedTiles = useMemo(() => {
     if (exercise?.kind !== "builder") return [];
@@ -126,9 +173,26 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
         <h3 className="fvt-display" style={{ fontSize: 21, margin: "0 0 6px" }}>Try a verified sentence</h3>
         <p style={{ color: COLORS.inkMuted, marginTop: 0, lineHeight: 1.5 }}>Choose a checked beginner sentence to generate four practice activities.</p>
         <div style={{ display: "grid", gap: 8 }}>
-          {VERIFIED_SENTENCES.slice(0, 6).map((item) => <button key={item.id} onClick={() => chooseVerified(item)} style={sentenceButton}><span><strong>{item.english}</strong><span style={{ display: "block", color: COLORS.inkMuted, fontSize: 13, marginTop: 3 }}>{item.french}</span></span><ArrowRight size={16} /></button>)}
+          {[...communitySentences, ...VERIFIED_SENTENCES].slice(0, 30).map((item) => <button key={item.id} onClick={() => chooseVerified(item)} style={sentenceButton}><span><strong>{item.english}</strong><span style={{ display: "block", color: COLORS.inkMuted, fontSize: 13, marginTop: 3 }}>{item.french}</span>{item.focus === "community" && <span style={{ display: "block", color: COLORS.correct, fontSize: 11, marginTop: 4 }}>COMMUNITY SHARED</span>}</span><ArrowRight size={16} /></button>)}
         </div>
       </section>}
+
+      <section style={cardStyle}>
+        <h3 className="fvt-display" style={{ fontSize: 21, margin: "0 0 6px" }}>Add to the shared sentence bank</h3>
+        <p style={{ color: COLORS.inkMuted, lineHeight: 1.5, marginTop: 0 }}>Contribute an English–French pair. Once saved, it becomes visible to everyone using this app.</p>
+        <form onSubmit={submitCommunitySentence} style={{ display: "grid", gap: 10 }}>
+          <label style={{ display: "grid", gap: 5, fontWeight: 600, fontSize: 14 }}>English sentence
+            <textarea value={communityEnglish} onChange={(event) => setCommunityEnglish(event.target.value)} maxLength={240} rows={2} placeholder="e.g. My sister likes music." style={communityInputStyle} />
+          </label>
+          <label style={{ display: "grid", gap: 5, fontWeight: 600, fontSize: 14 }}>French translation
+            <textarea value={communityFrench} onChange={(event) => setCommunityFrench(event.target.value)} maxLength={240} rows={2} placeholder="e.g. Ma sœur aime la musique." style={communityInputStyle} />
+          </label>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button type="submit" disabled={communityLoading || !communityEnglish.trim() || !communityFrench.trim()} style={{ ...primaryButton, opacity: communityLoading || !communityEnglish.trim() || !communityFrench.trim() ? 0.55 : 1 }}>{communityLoading ? "Sharing…" : "Share with everyone"} <ArrowRight size={15} /></button>
+          </div>
+          {communityStatus && <p role="status" style={{ color: communityStatus.startsWith("Added") ? COLORS.correct : COLORS.margin, fontSize: 13, lineHeight: 1.5, margin: 0 }}>{communityStatus}</p>}
+        </form>
+      </section>
 
       {sentence && !completed && exercise && <section style={cardStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", marginBottom: 12, flexWrap: "wrap" }}>
@@ -173,6 +237,8 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
     </div>
   );
 }
+
+const communityInputStyle = { width: "100%", boxSizing: "border-box", border: "1px solid #dcd9ca", borderRadius: 8, padding: 12, font: "inherit", background: "#fffdf8", color: "#20263a", resize: "vertical" };
 
 const cardStyle = { background: COLORS.paper, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 18, boxShadow: cardShadow, display: "grid", gap: 10 };
 const primaryButton = { display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, border: "none", borderRadius: 7, padding: "11px 14px", background: COLORS.margin, color: "#fff", fontWeight: 650, fontSize: 14, cursor: "pointer" };
