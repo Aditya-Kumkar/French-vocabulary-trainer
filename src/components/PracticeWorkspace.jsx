@@ -26,6 +26,10 @@ export default function PracticeWorkspace(props) {
   const focusAnchor = useRef(null);
 
   useEffect(() => {
+    try { sessionStorage.setItem("fvt-practice-section", section); } catch { /* Storage may be unavailable. */ }
+  }, [section]);
+
+  useEffect(() => {
     if (focusMode) focusAnchor.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [focusMode, section]);
 
