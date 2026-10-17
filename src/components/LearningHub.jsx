@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, BookOpen, CheckCircle2, ChevronRight, RotateCcw } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronRight, RotateCcw } from "lucide-react";
 import { COLORS, cardShadow, EmptyNote } from "../theme";
 import { LEARNING_TOPICS } from "../learningTopics.js";
 
@@ -43,7 +43,7 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
         <div>
           <div className="fvt-mono" style={{ color: COLORS.margin, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>START HERE · BEGINNER</div>
           <h2 className="fvt-display" style={{ fontSize: 28, margin: "5px 0" }}>Start with the basics</h2>
-          <p style={{ color: COLORS.inkMuted, lineHeight: 1.6, margin: 0 }}>No prior French needed. Learn one small idea, see simple examples, then try three questions.</p>
+          <p style={{ color: COLORS.inkMuted, lineHeight: 1.6, margin: 0 }}>No prior French needed. Learn one small idea, review the examples, then practise with a topic-specific question set.</p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 230px), 1fr))", gap: 12 }}>
           {LEARNING_TOPICS.map((item) => (
@@ -86,7 +86,7 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
             <h2 className="fvt-display" style={{ fontSize: 26, margin: "3px 0" }}>{topic.title}</h2>
           </div>
         </div>
-        <p style={{ lineHeight: 1.75, margin: "16px 0", color: COLORS.ink }}>{topic.lesson}</p>
+        <p style={{ lineHeight: 1.75, margin: "16px 0", color: COLORS.ink }}>{renderLesson(topic.lesson)}</p>
         <h3 style={{ fontSize: 15, margin: "18px 0 10px" }}>Examples</h3>
         <div style={{ display: "grid", gap: 0 }}>
           {topic.examples.map(([french, english]) => (
@@ -98,8 +98,11 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
       </section>
       <section style={{ background: COLORS.paper, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 20, boxShadow: cardShadow }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", marginBottom: 12 }}>
-          <h3 className="fvt-display" style={{ fontSize: 22, margin: 0 }}>Quick practice</h3>
-          <span className="fvt-mono" style={{ color: COLORS.inkMuted, fontSize: 12 }}>QUESTION {questionIndex + 1}/{topic.questions.length}</span>
+          <div>
+            <h3 className="fvt-display" style={{ fontSize: 22, margin: 0 }}>Practice set</h3>
+            <p style={{ color: COLORS.inkMuted, fontSize: 13, margin: "4px 0 0" }}>{topic.id === "articles" ? "Fill in the blank with the correct definite or indefinite article." : "Choose the correct answer for each question."}</p>
+          </div>
+          <span className="fvt-mono" style={{ color: COLORS.inkMuted, fontSize: 12, whiteSpace: "nowrap" }}>QUESTION {questionIndex + 1}/{topic.questions.length}</span>
         </div>
         <p style={{ fontSize: 18, fontWeight: 650, lineHeight: 1.5 }}>{question.prompt}</p>
         <div style={{ display: "grid", gap: 8 }}>
@@ -115,6 +118,14 @@ export default function LearningHub({ onRecordAttempt = () => {} }) {
         </div>
       </section>
     </div>
+  );
+}
+
+function renderLesson(text) {
+  return text.split(/(\\*\\*[^*]+\\*\\*)/g).map((part, index) =>
+    part.startsWith("**") && part.endsWith("**")
+      ? <strong key={index}>{part.slice(2, -2)}</strong>
+      : part
   );
 }
 
