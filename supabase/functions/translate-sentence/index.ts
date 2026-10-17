@@ -21,13 +21,11 @@ Deno.serve(async (req) => {
   const english = typeof body.english === "string" ? body.english.trim() : "";
   if (!english || english.length > 240 || /[\u0000-\u001F\u007F]/.test(english)) return json({ error: "Enter an English sentence of 1–240 characters." }, 400);
 
-  // Durable daily quota per signed-in user. The usage table has no client RLS policies.
+  // Atomic, durable daily quota per signed-in user.
   const admin = createClient(url, service), day = new Date().toISOString().slice(0, 10);
-  const { data: usage, error: readError } = await admin.from("sentence_ai_usage").select("request_count").eq("user_id", user.id).eq("usage_date", day).maybeSingle();
-  if (readError) return json({ error: "Usage limits could not be checked. Try again shortly." }, 503);
-  if ((usage?.request_count ?? 0) >= 20) return json({ error: "Today's AI translation limit (20) is reached. Verified practice remains available." }, 429);
-  const { error: writeError } = await admin.from("sentence_ai_usage").upsert({ user_id: user.id, usage_date: day, request_count: (usage?.request_count ?? 0) + 1 }, { onConflict: "user_id,usage_date" });
-  if (writeError) return json({ error: "Usage limits could not be recorded. Try again shortly." }, 503);
+  const { data: allowed, error: quotaError } = await admin.rpc("consume_sentence_ai_quota", { p_user_id: user.id, p_usage_date: day, p_daily_limit: 20 });
+  if (quotaError) return json({ error: "Usage limits could not be checked. Try again shortly." }, 503);
+  if (allowed !== true) return json({ error: "Today's AI translation limit (20) is reached. Verified practice remains available." }, 429);
 
   const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 15000);
   try {
