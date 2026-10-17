@@ -2,7 +2,7 @@
 -- Any signed-in user may contribute; every app user can read contributions.
 create table if not exists public.community_sentences (
   id uuid primary key default gen_random_uuid(),
-  created_by uuid not null default auth.uid() references auth.users(id) on delete set null,
+  created_by uuid not null default auth.uid() references auth.users(id) on delete cascade,
   english text not null check (char_length(trim(english)) between 1 and 240),
   french text not null check (char_length(trim(french)) between 1 and 240),
   created_at timestamptz not null default now()
