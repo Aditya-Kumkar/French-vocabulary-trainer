@@ -57,7 +57,7 @@ function buildQueue(words, settings) {
   return queue;
 }
 
-export default function PracticeView({ words, settings, setSettings, onRecordAttempt }) {
+export default function PracticeView({ words, settings, setSettings, onRecordAttempt, onSessionStart }) {
   const [mode, setMode] = useState("write");
   const [session, setSession] = useState(null); // { queue, index, score, mistakes }
   const [answer, setAnswer] = useState("");
@@ -71,6 +71,7 @@ export default function PracticeView({ words, settings, setSettings, onRecordAtt
     const reviewPool = dueWords.length > 0 ? dueWords : words;
     const queue = buildQueue(reviewPool, settings);
     setSession({ queue, index: 0, score: 0, mistakes: [] });
+    onSessionStart?.();
     setAnswer("");
     setAnswered(false);
     setTimeout(() => inputRef.current?.focus(), 50);

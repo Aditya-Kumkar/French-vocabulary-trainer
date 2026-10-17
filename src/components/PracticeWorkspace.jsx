@@ -25,10 +25,21 @@ export default function PracticeWorkspace(props) {
   const { words, classWords, sentences, settings, setSettings, onRecordAttempt, onRecordSentenceAttempt, isAdmin } = props;
   const allWords = [...words.map((word) => ({ ...word, source: "personal" })), ...classWords];
 
+  const selectedSection = SECTIONS.find((item) => item.value === section);
+  const activityContent = (
+    <>
+      {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} onSessionStart={() => setFocusMode(true)} />}
+      {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
+      {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
+      {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
+      {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
+    </>
+  );
+
   return (
     <div
       ref={focusAnchor}
-      className={`fvt-animate-in fvt-practice-workspace${focusMode ? " is-focused" : ""}`}
+      className={`fvt-animate-in fvt-practice-workspace${focusMode ? " is-focused fvt-focus-overlay" : ""}`}
       style={{ display: "grid", gap: 18 }}
     >
       {!focusMode && (
@@ -44,7 +55,7 @@ export default function PracticeWorkspace(props) {
                 type="button"
                 className={section === item.value ? "is-active" : ""}
                 aria-pressed={section === item.value}
-                onClick={() => { setSection(item.value); setFocusMode(true); }}
+                onClick={() => { setSection(item.value); setFocusMode(item.value !== "vocabulary"); }}
               >
                 {item.label}
               </button>
@@ -54,23 +65,18 @@ export default function PracticeWorkspace(props) {
       )}
 
       {focusMode && (
-        <section className="fvt-focus-overlay" role="dialog" aria-modal="true" aria-label="Practice focus session">
-          <div className="fvt-focus-bar">
-            <div>
-              <span className="fvt-focus-kicker">FOCUS SESSION</span>
-              <strong>{SECTIONS.find((item) => item.value === section)?.label}</strong>
-            </div>
-            <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>
+        <div className="fvt-focus-bar">
+          <div>
+            <span className="fvt-focus-kicker">FOCUS SESSION</span>
+            <strong>{selectedSection?.label}</strong>
           </div>
-          <div className="fvt-focus-content">
-            {section === "vocabulary" && <PracticeView words={allWords} settings={settings} setSettings={setSettings} onRecordAttempt={onRecordAttempt} />}
-            {section === "sentences" && <SentencesView sentences={sentences} onAdd={props.onSentenceAdd} onBulkAdd={props.onSentenceBulkAdd} onEdit={props.onSentenceEdit} onDelete={props.onSentenceDelete} onRecordAttempt={onRecordSentenceAttempt} />}
-            {section === "builder" && <SentenceBuilder onRecordAttempt={(correct) => props.trackActivity(correct)} />}
-            {section === "create" && <SentenceLab onRecordAttempt={(correct) => props.trackActivity(correct)} />}
-            {section === "exam" && <ExamMode words={allWords} sentences={sentences} onRecordAttempt={onRecordAttempt} onRecordSentenceAttempt={onRecordSentenceAttempt} />}
-          </div>
-        </section>
+          <button type="button" onClick={() => setFocusMode(false)}>Exit focus</button>
+        </div>
       )}
+
+      <div className={focusMode ? "fvt-focus-content" : "fvt-workspace-content"}>
+        {activityContent}
+      </div>
 
       {!focusMode && isAdmin && (
         <details style={{ borderTop: "1px solid #e4e0d5", paddingTop: 12 }}>
