@@ -9,11 +9,12 @@ test("curriculum includes all requested French beginner topics", () => {
   }
 });
 
-test("every topic has a lesson, examples, and three valid quiz questions", () => {
+test("every topic has a lesson, examples, and valid quiz questions", () => {
   for (const topic of LEARNING_TOPICS) {
     assert.ok(topic.lesson.length > 30, topic.id);
     assert.ok(topic.examples.length >= 3, topic.id);
-    assert.equal(topic.questions.length, 3, topic.id);
+    assert.ok(topic.questions.length >= 3, `${topic.id}: expected at least three questions`);
+    if (topic.id === "articles") assert.ok(topic.questions.length >= 15, "articles: expected an expanded bulk practice set");
     for (const question of topic.questions) {
       assert.ok(question.options.includes(question.answer), `${topic.id}: answer must be one of the options`);
       assert.ok(question.explain.length > 0, `${topic.id}: missing explanation`);
