@@ -370,7 +370,18 @@ export default function App() {
   const [classWords, setClassWords] = useState([]);
   const [sentences, setSentences] = useState([]);
   const [wordsLoading, setWordsLoading] = useState(true);
-  const [tab, setTab] = useState("home");
+  const [tab, setTab] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("fvt-active-tab");
+      return ["home", "learn", "practice", "progress"].includes(saved) ? saved : "home";
+    } catch {
+      return "home";
+    }
+  });
+
+  useEffect(() => {
+    try { sessionStorage.setItem("fvt-active-tab", tab); } catch { /* Storage may be unavailable. */ }
+  }, [tab]);
   const [settings, setSettingsState] = useState(loadSettings);
   const [saveError, setSaveError] = useState(false);
   const [activity, setActivity] = useState(() => readActivity());
