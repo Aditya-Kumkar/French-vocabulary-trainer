@@ -22,11 +22,12 @@ export default function HomeDashboard({ displayName, words = [], sentences = [],
       <p style={{ color: COLORS.inkMuted, fontSize: 13, margin: "9px 0 0" }}>{attempts >= goal ? "Goal complete — bravo !" : `${goal - attempts} more questions to reach your goal.`}</p>
     </section>
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))", gap: 10 }}>
-      <button onClick={() => onNavigate("learn")} style={shortcut}><BookOpen size={19} /><span><strong>Learn</strong><small>Lessons and examples</small></span><ArrowRight size={16} /></button>
-      <button onClick={() => onNavigate("practice")} style={shortcut}><Brain size={19} /><span><strong>Practice</strong><small>{words.length} vocabulary items · {sentences.length} sentences</small></span><ArrowRight size={16} /></button>
-      <button onClick={() => onNavigate("progress")} style={shortcut}><Target size={19} /><span><strong>Progress</strong><small>See how far you've come</small></span><ArrowRight size={16} /></button>
+      <button onClick={() => onNavigate("learn")} style={shortcut}><BookOpen size={19} /><span style={shortcutText}><strong>Learn</strong><small>Lessons and examples</small></span><ArrowRight size={16} /></button>
+      <button onClick={() => onNavigate("practice")} style={shortcut}><Brain size={19} /><span style={shortcutText}><strong>Practice</strong><small>{words.length} vocabulary items · {sentences.length} sentences</small></span><ArrowRight size={16} /></button>
+      <button onClick={() => onNavigate("progress")} style={shortcut}><Target size={19} /><span style={shortcutText}><strong>Progress</strong><small>See how far you've come</small></span><ArrowRight size={16} /></button>
     </div>
   </div>;
 }
 
+const shortcutText = { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 4, minWidth: 0, flex: 1, lineHeight: 1.35 };
 const shortcut = { display: "flex", alignItems: "center", gap: 12, textAlign: "left", padding: 15, minHeight: 74, border: "1px solid #e4e0d5", borderRadius: 10, background: "#fffdf8", color: "#292d3d", font: "inherit", cursor: "pointer" };
