@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-import { ArrowRight, CheckCircle2, Languages, RotateCcw, Sparkles, XCircle } from "lucide-react";
-import { supabase } from "../supabaseClient";
+import { ArrowRight, CheckCircle2, Languages, RotateCcw, XCircle } from "lucide-react";
 import { COLORS, cardShadow } from "../theme";
 import { VERIFIED_SENTENCES, findVerifiedSentence } from "../sentenceBank.js";
 import { generateExercises, isAnswerCorrect } from "../sentenceGenerator.js";
@@ -25,7 +24,6 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
   const [response, setResponse] = useState("");
   const [builtWords, setBuiltWords] = useState([]);
   const [checked, setChecked] = useState(false);
-  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [history, setHistory] = useState(readHistory);
   const [completed, setCompleted] = useState(false);
@@ -62,26 +60,13 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
     resetPractice(pair);
   };
 
-  const makeSentence = async () => {
+  const makeSentence = () => {
     const value = english.trim();
     if (!value) { setError("Write a short English sentence first."); return; }
     if (value.length > 240) { setError("Keep the sentence under 240 characters."); return; }
-    setBusy(true);
-    setError("");
-    try {
-      const verified = findVerifiedSentence(value);
-      if (verified) { resetPractice(verified); return; }
-      const { data, error: invokeError } = await supabase.functions.invoke("translate-sentence", { body: { english: value } });
-      if (invokeError) throw invokeError;
-      if (!data?.sentence?.french) throw new Error(data?.error || "The translation was incomplete.");
-      resetPractice(data.sentence);
-    } catch (err) {
-      setError(err?.message?.includes("not configured") || err?.context?.status === 503
-        ? "AI translation is not configured yet. Choose a verified sentence below, or configure the secure translate-sentence function."
-        : (err?.message || "Couldn't translate that sentence. Try one from the verified bank."));
-    } finally {
-      setBusy(false);
-    }
+    const verified = findVerifiedSentence(value);
+    if (verified) { resetPractice(verified); return; }
+    setError("That sentence is not in our verified beginner bank yet. Choose an example below so you can practise with a checked translation.");
   };
 
   const check = () => {
@@ -124,22 +109,22 @@ export default function SentenceLab({ onRecordAttempt = () => {} }) {
       <div>
         <div className="fvt-mono" style={{ color: COLORS.margin, fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>ENGLISH FIRST · A1</div>
         <h2 className="fvt-display" style={{ fontSize: 28, margin: "5px 0" }}>Sentence practice lab</h2>
-        <p style={{ color: COLORS.inkMuted, lineHeight: 1.6, margin: 0 }}>Start with English. We’ll use a verified translation when available, then turn it into four small practice tasks. New sentences use secure AI translation when configured.</p>
+        <p style={{ color: COLORS.inkMuted, lineHeight: 1.6, margin: 0 }}>Practise with checked English–French sentence pairs, then try four short exercises. We only use translations reviewed for this beginner bank.</p>
       </div>
 
       <section style={cardStyle}>
         <label htmlFor="sentence-english" style={{ display: "block", fontWeight: 650, marginBottom: 8 }}>Your English sentence</label>
         <textarea id="sentence-english" value={english} onChange={(event) => setEnglish(event.target.value)} maxLength={240} rows={2} placeholder="e.g. I am going to school." style={{ width: "100%", boxSizing: "border-box", border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: 12, font: "inherit", background: COLORS.page, color: COLORS.ink, resize: "vertical" }} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
-          <span style={{ color: COLORS.inkMuted, fontSize: 12 }}>{english.length}/240 characters · Verified matches need no AI call</span>
-          <button onClick={makeSentence} disabled={busy || !english.trim()} style={primaryButton}><Sparkles size={15} /> {busy ? "Preparing…" : "Create practice"} <ArrowRight size={15} /></button>
+          <span style={{ color: COLORS.inkMuted, fontSize: 12 }}>{english.length}/240 characters · Checked sentences only</span>
+          <button onClick={makeSentence} disabled={!english.trim()} style={primaryButton}>Create practice <ArrowRight size={15} /></button>
         </div>
         {error && <p role="alert" style={{ color: COLORS.margin, fontSize: 14, lineHeight: 1.5, marginBottom: 0 }}>{error}</p>}
       </section>
 
       {!sentence && <section style={cardStyle}>
         <h3 className="fvt-display" style={{ fontSize: 21, margin: "0 0 6px" }}>Try a verified sentence</h3>
-        <p style={{ color: COLORS.inkMuted, marginTop: 0, lineHeight: 1.5 }}>These beginner examples work immediately, even before AI translation is configured.</p>
+        <p style={{ color: COLORS.inkMuted, marginTop: 0, lineHeight: 1.5 }}>Choose a checked beginner sentence to generate four practice activities.</p>
         <div style={{ display: "grid", gap: 8 }}>
           {VERIFIED_SENTENCES.slice(0, 6).map((item) => <button key={item.id} onClick={() => chooseVerified(item)} style={sentenceButton}><span><strong>{item.english}</strong><span style={{ display: "block", color: COLORS.inkMuted, fontSize: 13, marginTop: 3 }}>{item.french}</span></span><ArrowRight size={16} /></button>)}
         </div>
